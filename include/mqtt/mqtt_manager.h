@@ -8,6 +8,7 @@
 #include <iostream>
 #include <vector>
 #include "mosquittopp.h"
+#include "protocol/protocol.h"
 
 #define DEFAULT_KEEP_ALIVE 60
 
@@ -45,7 +46,7 @@ private:
 
     std::vector<uint8_t> MakePacket(const std::string& topic, const std::string& payload);
 
-    std::vector<uint8_t> ParseMqttMessage(const std::string& topic, const std::string& payload);
+    std::pair<std::vector<uint8_t>, EParseJsonErrorCode> ParseMqttMessage(const std::string& topic, const std::string& payload);
 };
 
 #endif //PLANT_GATEWAY_MQTT_MANAGER_H

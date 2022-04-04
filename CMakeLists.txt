@@ -7,12 +7,15 @@ include_directories(include)
 include_directories(lib/serial/include)
 include_directories(lib/rapidjson/include)
 
+# Set App Sources
+# If Create New cpp file
+# Then Import Here
 set(APP_SOURCES
         src/mqtt/mqtt_manager.cpp src/master/master_board.cpp src/gateway/gateway_manager.cpp
         src/packet/request_packet.cpp src/packet/response_packet.cpp
         src/main.cpp)
 
-# Link Serial Library
+# Set Serial Library
 set(SERIAL_SOURCES lib/serial/src/serial.cc)
 IF (WIN32)
     list(APPEND SERIAL_SOURCES lib/serial/src/impl/win.cc)

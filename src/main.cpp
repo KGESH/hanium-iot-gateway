@@ -1,6 +1,6 @@
 #include <iostream>
 #include <chrono>
-#include <unistd.h>
+#include <thread>
 #include "mqtt/mqtt_manager.h"
 #include "gateway/gateway_manager.h"
 
@@ -11,7 +11,8 @@
     unsigned long polling_interval = 0;
 
     while (true) {
-        sleep(1);
+        using namespace std::chrono_literals;
+        std::this_thread::sleep_for(1000ms);
 
         if (mqtt_manager.IsConnected()) {
             using namespace std::chrono;

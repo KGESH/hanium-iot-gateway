@@ -3,10 +3,10 @@
 //
 
 #include <iostream>
-#include <cstring>
 #include <vector>
 #include "mqtt/mqtt_config.h"
 #include "mqtt/mqtt_manager.h"
+#include "mqtt/mqtt_topic.h"
 #include "rapidjson/document.h"
 #include "packet/request_packet.h"
 #include "gateway/gateway_manager.h"
@@ -62,9 +62,27 @@ bool MQTTManager::IsConnected() {
 }
 
 void MQTTManager::SubscribeTopics() {
-    GetInstance().subscribe(nullptr, "test/topic");
-    GetInstance().subscribe(nullptr, "master/+/led");
+    /*  Input Sensor  */
+    GetInstance().subscribe(nullptr, kTemperatureTopic.c_str());
 
+
+    /*  Output Sensor */
+    GetInstance().subscribe(nullptr, kLedTopic.c_str());
+    GetInstance().subscribe(nullptr, kWaterPumpTopic.c_str());
+
+
+    /*  IO Sensor */
+    /*  TODO: Create After..  */
+
+
+    /*  Master Only */
+    GetInstance().subscribe(nullptr, kReadMasterMemoryTopic.c_str());
+    GetInstance().subscribe(nullptr, kWriteMasterMemoryTopic.c_str());
+
+
+    /*  Message Test  */
+    GetInstance().subscribe(nullptr, kTestRawPacket);
+    GetInstance().subscribe(nullptr, "test/topic");
 }
 
 void MQTTManager::PublishTopic(const std::string& topic, const std::string& payload) {
@@ -72,22 +90,30 @@ void MQTTManager::PublishTopic(const std::string& topic, const std::string& payl
 }
 
 std::vector<uint8_t> MQTTManager::MakePacket(const std::string& topic, const std::string& payload) {
-    return ParseMqttMessage(topic, payload);
+    auto[packet, parse_fail] = ParseMqttMessage(topic, payload);
+    if (parse_fail) {
+        /*  TODO: After log mqtt message to database
+         *  std::cout << "Parse Fail. Code: " << parse_fail << std::endl;
+         * */
+        return {};
+    }
+
+    return packet;
 }
 
-std::vector<uint8_t> MQTTManager::ParseMqttMessage(const std::string& topic, const std::string& payload) {
+std::pair<std::vector<uint8_t>, EParseJsonErrorCode>
+MQTTManager::ParseMqttMessage(const std::string& topic, const std::string& payload) {
 
     /* TODO: Change Return Value to std::pair< psacket, success or fail >*/
     rapidjson::Document document;
     if (document.Parse(payload.c_str()).HasParseError() ||
         document.Parse(document["data"].GetString()).HasParseError()) {
 
-        std::cout << "Json Parse Error!" << std::endl;
-        return {};
+        return {{}, kFailParsePayload};
     }
 
     if (!document.IsObject()) {
-        return {};
+        return {{}, kFailIsNotObject};
     }
 
     uint8_t start = document["start"].GetUint();
@@ -107,9 +133,9 @@ std::vector<uint8_t> MQTTManager::ParseMqttMessage(const std::string& topic, con
         }
 
         PacketBody body{address_high, address_low, body_data};
-        return RequestPacket{header, body}.Packet();
+        return {RequestPacket{header, body}.Packet(), kSuccessParse};
     }
 
-    return RequestPacket{header}.Packet();
+    return {RequestPacket{header}.Packet(), kSuccessParse};
 }
 

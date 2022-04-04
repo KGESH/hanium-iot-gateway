@@ -4,6 +4,8 @@
 
 #ifndef PLANT_GATEWAY_PROTOCOL_H
 #define PLANT_GATEWAY_PROTOCOL_H
+
+/*  TODO: Extract Status Code After..  */
 #include <cstdint>
 
 enum EMasterProtocol {
@@ -59,12 +61,20 @@ enum EErrorStatusCode {
     kOK = 0x80,
 };
 
-enum EReceiveStatusCode {
-    kSuccess = 0,
+enum EReceiveErrorCode {
+    kSuccessReceive = 0,
     kFailReceiveHeader = 1,
     kFailOverMaxSlaveCount = 2,
     kFailReceiveBodyData = 3,
     kFailReceiveTail = 4,
+};
+
+enum EParseJsonErrorCode {
+    kSuccessParse = 0,
+    kFailParsePayload = 1,
+    kFailIsNotObject = 2,
+
+
 };
 
 

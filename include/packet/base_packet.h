@@ -4,7 +4,8 @@
 
 #ifndef PLANT_GATEWAY_BASE_PACKET_H
 #define PLANT_GATEWAY_BASE_PACKET_H
-#include "protocol.h"
+
+#include "protocol/protocol.h"
 #include <vector>
 
 #pragma pack(push, 1)

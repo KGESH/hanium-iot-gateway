@@ -175,7 +175,7 @@ void GatewayManager::Polling(MQTTManager& mqtt_manager) const {
     master_board_.IncreasePollingCount();
 }
 
-std::pair<ResponsePacket, EReceiveStatusCode> GatewayManager::ReceivePacket() const {
+std::pair<ResponsePacket, EReceiveErrorCode> GatewayManager::ReceivePacket() const {
     constexpr static uint8_t kMaxSlaveCount = 129;
 
     while (master_board_.serial_port().available()) {
@@ -216,7 +216,7 @@ std::pair<ResponsePacket, EReceiveStatusCode> GatewayManager::ReceivePacket() co
                 return {{}, kFailReceiveTail};
 
             } else {
-                return {ResponsePacket{header, body, tail}, kSuccess};
+                return {ResponsePacket{header, body, tail}, kSuccessReceive};
             }
         }
     }
