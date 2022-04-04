@@ -2,15 +2,13 @@
 // Created by 지성현 on 2022/03/30.
 //
 
-
-#include <iterator>
-#include <sstream>
 #include <cmath>
 #include "master_config.h"
 #include "gateway_manager.h"
 #include "mqtt_manager.h"
 #include "mqtt_topic.h"
 #include "response_packet.h"
+
 
 GatewayManager::GatewayManager(const std::string& serial_port_name, int baudrate)
         : master_board_(serial_port_name, baudrate) {}
@@ -20,9 +18,12 @@ std::string GatewayManager::GetSlaveStateTopic(const std::string& slave_id, cons
 }
 
 bool GatewayManager::ListeningMaster(MQTTManager& mqtt_manager) const {
-    auto[packet, success_receive] = ReceivePacket();
+    auto[packet, receive_fail] = ReceivePacket();
 
-    if (!success_receive || !packet.ValidChecksum()) {
+    if (receive_fail || !packet.ValidChecksum()) {
+#ifdef DEBUG
+        std::cout << "Receive Fail Code: " << receive_fail << std::endl;
+#endif
         return false;
     }
 
@@ -174,18 +175,25 @@ void GatewayManager::Polling(MQTTManager& mqtt_manager) const {
     master_board_.IncreasePollingCount();
 }
 
-std::pair<ResponsePacket, bool> GatewayManager::ReceivePacket() const {
+std::pair<ResponsePacket, EReceiveStatusCode> GatewayManager::ReceivePacket() const {
+    constexpr static uint8_t kMaxSlaveCount = 129;
+
     while (master_board_.serial_port().available()) {
-        constexpr static uint8_t kMaxSlaveCount = 129;
         uint8_t packet_length = 0;
         ResponseHeader header;
 
+        /* 1byte 읽고 패킷의 시작인지 판단
+         * 패킷의 시작이면 header에 복사
+         * 이 때, 복사 시작 주소는 header + 1
+         * header 첫번째 멤버 start의
+         * 기본 값이 0x23이기 때문
+         * */
         if (static_cast<uint8_t>(master_board_.serial_port().read().c_str()[0]) == kStart &&
             master_board_.serial_port().read(reinterpret_cast<uint8_t*>(&header) + 1, sizeof(ResponseHeader) - 1)) {
 
-            if (header.data_length > kMaxSlaveCount) {  // TODO: Refactoring magic number
+            if (header.data_length > kMaxSlaveCount) {
                 /* Need Memory Crash Handling  */
-                return {{}, false};
+                return {{}, kFailOverMaxSlaveCount};
             }
 
             /*  Read Body
@@ -195,7 +203,7 @@ std::pair<ResponsePacket, bool> GatewayManager::ReceivePacket() const {
                 packet_length = master_board_.serial_port().read(body.data(), header.data_length);
 
                 if (packet_length <= 0) {
-                    return {{}, false};
+                    return {{}, kFailReceiveBodyData};
                 }
             }
 
@@ -205,17 +213,15 @@ std::pair<ResponsePacket, bool> GatewayManager::ReceivePacket() const {
             PacketTail tail{static_cast<uint8_t>(buffer.c_str()[0]), static_cast<uint8_t>(buffer.c_str()[1])};
 
             if (receive_tail_length <= 0) {
-                /* Error Handling */
-                return {{}, false};
+                return {{}, kFailReceiveTail};
 
             } else {
-                /* TODO: Need Refactoring*/
-                return {ResponsePacket{header, body, tail}, true};
+                return {ResponsePacket{header, body, tail}, kSuccess};
             }
         }
     }
 
-    return {{}, false};
+    return {{}, kFailReceiveHeader};
 }
 
 void

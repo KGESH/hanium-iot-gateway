@@ -18,7 +18,6 @@ void MasterBoard::ResetPollingCount() {
 
 void MasterBoard::IncreasePollingCount() {
     polling_count_++;
-
 }
 
 int MasterBoard::polling_count() {

@@ -37,7 +37,7 @@ private:
 
     GatewayManager(const std::string& serial_port_name, int baudrate);
 
-    std::pair<ResponsePacket, bool> ReceivePacket() const;
+    std::pair<ResponsePacket, EReceiveStatusCode> ReceivePacket() const;
 
     void PublishError(MQTTManager& mqtt_manager, const std::string& topic, const std::string& message) const;
 

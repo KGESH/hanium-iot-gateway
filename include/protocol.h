@@ -59,5 +59,13 @@ enum EErrorStatusCode {
     kOK = 0x80,
 };
 
+enum EReceiveStatusCode {
+    kSuccess = 0,
+    kFailReceiveHeader = 1,
+    kFailOverMaxSlaveCount = 2,
+    kFailReceiveBodyData = 3,
+    kFailReceiveTail = 4,
+};
+
 
 #endif //PLANT_GATEWAY_PROTOCOL_H

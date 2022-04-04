@@ -62,13 +62,13 @@ bool MQTTManager::IsConnected() {
 }
 
 void MQTTManager::SubscribeTopics() {
-    GetInstance().subscribe(NULL, "test/topic");
-    GetInstance().subscribe(NULL, "master/+/led");
+    GetInstance().subscribe(nullptr, "test/topic");
+    GetInstance().subscribe(nullptr, "master/+/led");
 
 }
 
 void MQTTManager::PublishTopic(const std::string& topic, const std::string& payload) {
-    publish(NULL, topic.c_str(), payload.length(), payload.data());
+    publish(nullptr, topic.c_str(), payload.length(), payload.data());
 }
 
 std::vector<uint8_t> MQTTManager::MakePacket(const std::string& topic, const std::string& payload) {
