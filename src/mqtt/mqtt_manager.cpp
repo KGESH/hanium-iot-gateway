@@ -5,11 +5,11 @@
 #include <iostream>
 #include <cstring>
 #include <vector>
-#include "mqtt_config.h"
-#include "mqtt_manager.h"
+#include "mqtt/mqtt_config.h"
+#include "mqtt/mqtt_manager.h"
 #include "rapidjson/document.h"
-#include "request_packet.h"
-#include "gateway_manager.h"
+#include "packet/request_packet.h"
+#include "gateway/gateway_manager.h"
 
 MQTTManager::MQTTManager(const char* id, const char* host, int port) : mosquittopp(id) {
     mosqpp::lib_init();

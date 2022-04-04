@@ -1,8 +1,8 @@
 #include <iostream>
 #include <chrono>
 #include <unistd.h>
-#include "mqtt_manager.h"
-#include "gateway_manager.h"
+#include "mqtt/mqtt_manager.h"
+#include "gateway/gateway_manager.h"
 
 
 [[noreturn]] void run() {

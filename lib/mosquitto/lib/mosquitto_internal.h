@@ -20,7 +20,7 @@ Contributors:
 #ifndef MOSQUITTO_INTERNAL_H
 #define MOSQUITTO_INTERNAL_H
 
-#include "master_config.h"
+#include "master/master_config.h"
 
 #ifdef WIN32
 #  include <winsock2.h>

@@ -8,8 +8,8 @@ include_directories(lib/serial/include)
 include_directories(lib/rapidjson/include)
 
 set(APP_SOURCES
-        src/mqtt_manager.cpp src/master_board.cpp src/gateway_manager.cpp
-        src/request_packet.cpp src/response_packet.cpp
+        src/mqtt/mqtt_manager.cpp src/master/master_board.cpp src/gateway/gateway_manager.cpp
+        src/packet/request_packet.cpp src/packet/response_packet.cpp
         src/main.cpp)
 
 # Link Serial Library

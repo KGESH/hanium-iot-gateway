@@ -20,7 +20,7 @@ Contributors:
 #ifndef MOSQUITTO_BROKER_INTERNAL_H
 #define MOSQUITTO_BROKER_INTERNAL_H
 
-#include "master_config.h"
+#include "master/master_config.h"
 #include <stdio.h>
 
 #ifdef WITH_WEBSOCKETS

@@ -6,10 +6,10 @@
 #define PLANT_GATEWAY_GATEWAY_MANAGER_H
 
 #include "protocol.h"
-#include "mqtt_manager.h"
-#include "response_packet.h"
-#include "request_packet.h"
-#include "master_board.h"
+#include "mqtt/mqtt_manager.h"
+#include "packet/response_packet.h"
+#include "packet/request_packet.h"
+#include "master/master_board.h"
 
 
 class GatewayManager {

@@ -3,11 +3,11 @@
 //
 
 #include <cmath>
-#include "master_config.h"
-#include "gateway_manager.h"
-#include "mqtt_manager.h"
-#include "mqtt_topic.h"
-#include "response_packet.h"
+#include "master/master_config.h"
+#include "gateway/gateway_manager.h"
+#include "mqtt/mqtt_manager.h"
+#include "mqtt/mqtt_topic.h"
+#include "packet/response_packet.h"
 
 
 GatewayManager::GatewayManager(const std::string& serial_port_name, int baudrate)

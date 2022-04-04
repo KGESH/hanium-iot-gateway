@@ -2,7 +2,7 @@
 // Created by 지성현 on 2022/04/02.
 //
 
-#include "request_packet.h"
+#include "packet/request_packet.h"
 
 RequestPacket::RequestPacket(RequestHeader& header, PacketBody& body) :
         header_(header), body_(body), tail_(PacketTail{CalculateChecksum(header, body), kEnd}) {

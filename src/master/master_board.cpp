@@ -1,7 +1,7 @@
 //
 // Created by 지성현 on 2022/04/02.
 //
-#include "master_board.h"
+#include "master/master_board.h"
 
 int MasterBoard::polling_count_ = 0;
 

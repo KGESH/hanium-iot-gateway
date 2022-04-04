@@ -1,7 +1,7 @@
 //
 // Created by 지성현 on 2022/04/02.
 //
-#include "response_packet.h"
+#include "packet/response_packet.h"
 
 
 ResponsePacket::ResponsePacket(ResponseHeader header, std::vector<uint8_t>& body, PacketTail tail)
