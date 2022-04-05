@@ -6,7 +6,7 @@
 int MasterBoard::polling_count_ = 0;
 
 MasterBoard::MasterBoard(const std::string& port_name, int baudrate)
-        : serial_port_(std::make_unique<serial::Serial>(port_name, baudrate, serial::Timeout::simpleTimeout(1000))) {}
+        : serial_port_(std::make_unique<serial::Serial>(port_name, baudrate, serial::Timeout::simpleTimeout(20000))) {}
 
 serial::Serial& MasterBoard::serial_port() const {
     return *serial_port_;

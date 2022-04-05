@@ -4,8 +4,6 @@
 #include "mqtt/mqtt_manager.h"
 #include "gateway/gateway_manager.h"
 
-#define DEBUG
-
 
 [[noreturn]] void run() {
     auto& mqtt_manager = MQTTManager::GetInstance();
@@ -20,15 +18,13 @@
             using namespace std::chrono;
             auto now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
-            if (now - polling_interval > 3000) {
-                polling_interval = now;
-                gateway_manager.Polling(mqtt_manager);
-            }
+//            if (now - polling_interval > 3000) {
+//                polling_interval = now;
+//                gateway_manager.Polling(mqtt_manager);
+//            }
 
             if (gateway_manager.ListeningMaster(mqtt_manager)) {
-#ifdef DEBUG
                 std::cout << "Receive Success!" << std::endl;
-#endif
             }
 
         } else {

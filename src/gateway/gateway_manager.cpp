@@ -26,8 +26,10 @@ bool GatewayManager::ListeningMaster(MQTTManager& mqtt_manager) const {
 //#endif
         return false;
     }
+    std::cout << "Receive Success" << std::endl;
 
     if (packet.header().error_code != kOK) {
+        std::cout << "Receive Success but header get error code" << std::endl;
         PublishError(mqtt_manager, kErrorTopic, PacketToString(packet));
     }
 
@@ -73,6 +75,7 @@ void GatewayManager::ParseMemoryRead(ResponsePacket& packet, MQTTManager& mqtt_m
 
     switch (memory_address) {
         case kTemperatureStart ... kTemperatureEnd:
+            std::cout << "Parse Memory Read : Temperature" << std::endl;
             PublishTemperature(packet, mqtt_manager);
             return;
 
@@ -166,8 +169,8 @@ void GatewayManager::Polling(MQTTManager& mqtt_manager) const {
     static constexpr auto kMaxPollingCount = 10;
     if (master_board_.polling_count() > kMaxPollingCount) {
         /*  TODO: Publish master error message after change protocol  */
-        std::cout << "Polling Count Over 10" << std::endl;
-        PublishError(mqtt_manager, kPollingErrorTopic, "no response");
+//        std::cout << "Polling Count Over 10" << std::endl;
+//        PublishError(mqtt_manager, kPollingErrorTopic, "no response");
     }
 
     RequestPacket polling_packet(RequestHeader{0x23, 0x27, 0xff, 0xa0, 0});
