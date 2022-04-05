@@ -21,9 +21,9 @@ bool GatewayManager::ListeningMaster(MQTTManager& mqtt_manager) const {
     auto[packet, receive_fail] = ReceivePacket();
 
     if (receive_fail || !packet.ValidChecksum()) {
-#ifdef DEBUG
+//#ifdef DEBUG
         std::cout << "Receive Fail Code: " << receive_fail << std::endl;
-#endif
+//#endif
         return false;
     }
 

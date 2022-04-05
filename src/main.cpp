@@ -4,6 +4,8 @@
 #include "mqtt/mqtt_manager.h"
 #include "gateway/gateway_manager.h"
 
+#define DEBUG
+
 
 [[noreturn]] void run() {
     auto& mqtt_manager = MQTTManager::GetInstance();

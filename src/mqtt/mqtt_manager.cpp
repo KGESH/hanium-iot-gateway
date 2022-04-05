@@ -12,12 +12,14 @@
 #include "gateway/gateway_manager.h"
 
 MQTTManager::MQTTManager(const char* id, const char* host, int port) : mosquittopp(id) {
+    std::cout << "Call Constructor" << std::endl;
     mosqpp::lib_init();
     int keepalive = DEFAULT_KEEP_ALIVE;
     connect(host, port, keepalive);
 }
 
 MQTTManager::~MQTTManager() {
+    std::cout << "Call Destructor" << std::endl;
     mosqpp::lib_cleanup();
 }
 
@@ -36,6 +38,10 @@ void MQTTManager::on_message(const struct mosquitto_message* message) {
     std::string topic(message->topic);
     std::string payload(static_cast<char*>(message->payload));
 
+#ifdef DEBUG
+    std::cout << "Receive Topic: " << topic << std::endl;
+    std::cout << "Payload: " << payload << std::endl;
+#endif
     auto packet = MakePacket(topic, payload);
 
     /* Write master board*/
@@ -104,37 +110,61 @@ std::vector<uint8_t> MQTTManager::MakePacket(const std::string& topic, const std
 std::pair<std::vector<uint8_t>, EParseJsonErrorCode>
 MQTTManager::ParseMqttMessage(const std::string& topic, const std::string& payload) {
 
-    /* TODO: Change Return Value to std::pair< psacket, success or fail >*/
+    /*  TODO: Fix data_list memory crash & Cleanup Code */
+    std::cout << "Try Parse Topic: " << topic << std::endl;
+    std::cout << "Try Parse Payload: " << payload << std::endl;
+
     rapidjson::Document document;
-    if (document.Parse(payload.c_str()).HasParseError() ||
-        document.Parse(document["data"].GetString()).HasParseError()) {
+    if (document.Parse(payload.c_str()).HasParseError()) {
+        std::cout << "Payload Parse Error" << std::endl;
 
-        return {{}, kFailParsePayload};
     }
 
-    if (!document.IsObject()) {
-        return {{}, kFailIsNotObject};
+    rapidjson::Value& parsedPayload = document["data"];
+    rapidjson::Document document2;
+    if (document2.Parse(parsedPayload.GetString()).HasParseError()) {
+        std::cout << "Parse data Error" << std::endl;
     }
 
-    uint8_t start = document["start"].GetUint();
-    uint8_t index = document["index"].GetUint();
-    uint8_t target_id = document["target_id"].GetUint();
-    uint8_t command = document["command"].GetUint();
-    uint8_t data_length = document["data_length"].GetUint();
-    uint8_t address_high = document["address_high"].GetUint();
-    uint8_t address_low = document["address_low"].GetUint();
-    auto data_list = document["data_list"].GetArray();
+    std::cout << "data type: " << document2.GetType() << std::endl;
+    if (document2.IsObject()) {
+        std::cout << "Parsed doc2 Is Object!" << std::endl;
+    } else {
+        std::cout << "Parsed doc2 Is Not Object!" << std::endl;
+    }
+//
+//    if (document.Parse(parsedPayload.GetString()).HasParseError()) {
+//
+//        return {{}, kFailParsePayload};
+//    }
+//
+//    if (!document.IsObject()) {
+//        return {{}, kFailIsNotObject};
+//    }
 
+    uint8_t start = document2["start"].GetUint();
+    std::cout << "Start : " << start << std::endl;
+
+    uint8_t index = document2["index"].GetUint();
+    uint8_t target_id = document2["target_id"].GetUint();
+    uint8_t command = document2["command"].GetUint();
+    uint8_t data_length = document2["data_length"].GetUint();
+    uint8_t address_high = document2["address_high"].GetUint();
+    uint8_t address_low = document2["address_low"].GetUint();
     RequestHeader header{start, index, target_id, command, data_length};
-    if (data_length > 0) {
-        std::vector<uint8_t> body_data;
-        for (const auto& datum: data_list) {
-            body_data.emplace_back(datum.GetUint());
-        }
+//    if (!document2["data_list"].GetArray().Empty()) {
+//        auto data_list = document2["data_list"].GetArray();
+//        if (data_length > 2) {
+//            std::vector<uint8_t> body_data;
+//            for (const auto& datum: data_list) {
+//                body_data.emplace_back(datum.GetUint());
+//            }
+//
+//            PacketBody body{address_high, address_low, body_data};
+//            return {RequestPacket{header, body}.Packet(), kSuccessParse};
+//        }
+//    }
 
-        PacketBody body{address_high, address_low, body_data};
-        return {RequestPacket{header, body}.Packet(), kSuccessParse};
-    }
 
     return {RequestPacket{header}.Packet(), kSuccessParse};
 }
