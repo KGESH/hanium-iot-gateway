@@ -8,13 +8,14 @@
 #include "mqtt/mqtt_manager.h"
 #include "mqtt/mqtt_topic.h"
 #include "packet/response_packet.h"
+#include "util/util.h"
 
 
 GatewayManager::GatewayManager(const std::string& serial_port_name, int baudrate)
         : master_board_(serial_port_name, baudrate) {}
 
-std::string GatewayManager::GetSlaveStateTopic(const std::string& slave_id, const std::string& sensor_name) const {
-    return kMasterTopic + kMasterId + "/slave/" + slave_id + "/" + sensor_name + "/state";
+std::string GatewayManager::GetSlaveStateTopic(const uint8_t slave_id, const std::string& sensor_name) const {
+    return kMasterTopic + kMasterId + "/slave/" + std::to_string(slave_id) + "/" + sensor_name + "/state";
 }
 
 bool GatewayManager::ListeningMaster(MQTTManager& mqtt_manager) const {
@@ -28,7 +29,7 @@ bool GatewayManager::ListeningMaster(MQTTManager& mqtt_manager) const {
     }
 
     if (packet.header().error_code != kOK) {
-        PublishError(mqtt_manager, kErrorTopic, PacketToString(packet));
+        PublishError(mqtt_manager, kErrorTopic, Util::PacketToString(packet));
     }
 
     ParseCommand(packet, mqtt_manager);
@@ -72,7 +73,6 @@ void GatewayManager::ParseCommand(ResponsePacket& packet, MQTTManager& mqtt_mana
 }
 
 void GatewayManager::ParseMemoryRead(ResponsePacket& packet, MQTTManager& mqtt_manager, uint16_t memory_address) const {
-
     switch (memory_address) {
         case kTemperatureStart ... kTemperatureEnd:
             PublishTemperature(packet, mqtt_manager);
@@ -99,35 +99,25 @@ void GatewayManager::ParseMemoryRead(ResponsePacket& packet, MQTTManager& mqtt_m
 }
 
 void GatewayManager::PublishLedTopic(ResponsePacket& packet, MQTTManager& mqtt_manager) const {
-    const auto led_topic = std::move(GetSlaveStateTopic(std::to_string(packet.header().target_id), "led"));
+    const auto led_topic = std::move(GetSlaveStateTopic(packet.header().target_id, "led"));
     std::cout << "Publish Led Topic" << led_topic << std::endl;
 
     /* TODO: Change message */
-    mqtt_manager.PublishTopic(led_topic, PacketToString(packet));
+    mqtt_manager.PublishTopic(led_topic, Util::PacketToString(packet));
 }
 
 void GatewayManager::PublishMotorTopic(ResponsePacket& packet, MQTTManager& mqtt_manager) const {
-    auto motor_topic = std::move(GetSlaveStateTopic(std::to_string(packet.header().target_id), "water"));
-    std::cout << "Publish Motor Topic" << std::endl;
+    auto motor_topic = std::move(GetSlaveStateTopic(packet.header().target_id, "water"));
     /* TODO: Change message */
-    mqtt_manager.PublishTopic(motor_topic, PacketToString(packet));
+    mqtt_manager.PublishTopic(motor_topic, Util::PacketToString(packet));
 }
 
 void GatewayManager::PublishTestPacket(ResponsePacket& packet, MQTTManager& mqtt_manager) const {
-    auto message(PacketToString(packet));
+    auto message(Util::PacketToString(packet));
 
     mqtt_manager.PublishTopic(kTestResponsePacket, message);
 }
 
-std::string GatewayManager::PacketToString(ResponsePacket& packet) const {
-    std::stringstream ss;
-    for (const auto& data: packet.Packet()) {
-        ss << data;
-    }
-
-    auto message = ss.str();
-    return message;
-}
 
 void GatewayManager::PublishPollingSuccess(MQTTManager& mqtt_manager) const {
     mqtt_manager.PublishTopic(kPollingTopic, std::to_string(kOK));
@@ -241,4 +231,14 @@ const GatewayManager& GatewayManager::GetInstance() {
 
 const MasterBoard& GatewayManager::master_board() {
     return GetInstance().master_board_;
+}
+
+void GatewayManager::RequestTemperature() const {
+    /* TODO: after iterator all slave id
+     * ex) 0x11, 0x12, 0x22, 0x33 ...*/
+    constexpr uint8_t kSlaveId = 0x11;
+    const RequestHeader header{0x23, 0x22, kSlaveId, 0xc1, 0x02};
+    const PacketBody body{0x07, 0xd0};
+    RequestPacket temperature_packet(header, body);
+    master_board_.serial_port().write(temperature_packet.Packet());
 }

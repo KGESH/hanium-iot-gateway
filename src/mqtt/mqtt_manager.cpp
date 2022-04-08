@@ -156,6 +156,7 @@ MQTTManager::ParseMqttMessage(const std::string& topic, const std::string& paylo
         return {{}, kFailIsNotObject};
     }
 
+
     uint8_t start = document["start"].GetUint();
     uint8_t index = document["index"].GetUint();
     uint8_t target_id = document["target_id"].GetUint();
@@ -164,7 +165,6 @@ MQTTManager::ParseMqttMessage(const std::string& topic, const std::string& paylo
     uint8_t address_high = document["address_high"].GetUint();
     uint8_t address_low = document["address_low"].GetUint();
     RequestHeader header{start, index, target_id, command, data_length};
-
 
     if (data_length > 0) {
         std::vector<uint8_t> body_data;

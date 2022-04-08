@@ -32,6 +32,8 @@ public:
 
     void Polling(MQTTManager& mqtt_manager) const;
 
+    void RequestTemperature() const;
+
 
 private:
 
@@ -53,9 +55,7 @@ private:
 
     void PublishLedTopic(ResponsePacket& packet, MQTTManager& mqtt_manager) const;
 
-    std::string PacketToString(ResponsePacket& packet) const;
-
-    std::string GetSlaveStateTopic(const std::string& slave_id, const std::string& sensor_name) const;
+    std::string GetSlaveStateTopic(uint8_t slave_id, const std::string& sensor_name) const;
 
     MasterBoard master_board_;
 };

@@ -4,13 +4,14 @@
 
 #ifndef PLANT_GATEWAY_RESPONSE_PACKET_H
 #define PLANT_GATEWAY_RESPONSE_PACKET_H
+
 #include "base_packet.h"
 
 class ResponsePacket : public BasePacket {
 public:
     ResponsePacket() = default;
 
-    ResponsePacket(ResponseHeader header, std::vector<uint8_t>& body, PacketTail tail);
+    ResponsePacket(const ResponseHeader& header, const std::vector<uint8_t>& body, const PacketTail& tail);
 
     const std::vector<uint8_t>& Packet() override;
 

@@ -11,9 +11,9 @@ class RequestPacket : public BasePacket {
 public:
     RequestPacket() = default;
 
-    explicit RequestPacket(RequestHeader header);
+    explicit RequestPacket(const RequestHeader& header);
 
-    RequestPacket(RequestHeader& header, PacketBody& body);
+    RequestPacket(const RequestHeader& header,const PacketBody& body);
 
     const std::vector<uint8_t>& Packet() override;
 
@@ -36,9 +36,9 @@ private:
 
     PacketTail tail_;
 
-    uint8_t CalculateChecksum(RequestHeader& header);
+    uint8_t CalculateChecksum(const RequestHeader& header);
 
-    uint8_t CalculateChecksum(RequestHeader& header, PacketBody body);
+    uint8_t CalculateChecksum(const RequestHeader& header, const PacketBody& body);
 };
 
 

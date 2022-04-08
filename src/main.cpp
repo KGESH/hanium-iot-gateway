@@ -9,6 +9,7 @@
     auto& mqtt_manager = MQTTManager::GetInstance();
     auto& gateway_manager = GatewayManager::GetInstance();
     unsigned long polling_interval = 0;
+    unsigned long temperature_interval = 0;
 
     while (true) {
         using namespace std::chrono_literals;
@@ -23,8 +24,15 @@
                 gateway_manager.Polling(mqtt_manager);
             }
 
+            if (now - temperature_interval > 5000) {
+                temperature_interval = now;
+                gateway_manager.RequestTemperature();
+            }
+
             if (gateway_manager.ListeningMaster(mqtt_manager)) {
-//                std::cout << "Receive Success!" << std::endl;
+#ifdef DEBUG
+                std::cout << "Receive Success!" << std::endl;
+#endif
             }
 
         } else {

@@ -4,12 +4,12 @@
 
 #include "packet/request_packet.h"
 
-RequestPacket::RequestPacket(RequestHeader& header, PacketBody& body) :
+RequestPacket::RequestPacket(const RequestHeader& header,const PacketBody& body) :
         header_(header), body_(body), tail_(PacketTail{CalculateChecksum(header, body), kEnd}) {
     /*  TODO: assert checksum  */
 }
 
-uint8_t RequestPacket::CalculateChecksum(RequestHeader& header, PacketBody body) {
+uint8_t RequestPacket::CalculateChecksum(const RequestHeader& header, const PacketBody& body) {
     /* TODO: Refactor  */
     uint8_t checksum = 0;
     checksum += header.start;
@@ -29,7 +29,7 @@ uint8_t RequestPacket::CalculateChecksum(RequestHeader& header, PacketBody body)
     return checksum;
 }
 
-uint8_t RequestPacket::CalculateChecksum(RequestHeader& header) {
+uint8_t RequestPacket::CalculateChecksum(const RequestHeader& header) {
     /* TODO: Refactor  */
     uint8_t checksum = 0;
     checksum += header.start;
@@ -75,8 +75,8 @@ const std::vector<uint8_t>& RequestPacket::Packet() {
     return packet_;
 }
 
-RequestPacket::RequestPacket(RequestHeader header) : header_(header),
-                                                     tail_(PacketTail{CalculateChecksum(header), kEnd}) {}
+RequestPacket::RequestPacket(const RequestHeader& header) : header_(header),
+                                                            tail_(PacketTail{CalculateChecksum(header), kEnd}) {}
 
 RequestHeader& RequestPacket::header() {
     return header_;

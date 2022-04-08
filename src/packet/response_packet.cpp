@@ -3,8 +3,7 @@
 //
 #include "packet/response_packet.h"
 
-
-ResponsePacket::ResponsePacket(ResponseHeader header, std::vector<uint8_t>& body, PacketTail tail)
+ResponsePacket::ResponsePacket(const ResponseHeader& header, const std::vector<uint8_t>& body, const PacketTail& tail)
         : header_(header), body_(),
           tail_(tail) {
 
