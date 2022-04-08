@@ -21,15 +21,13 @@ bool GatewayManager::ListeningMaster(MQTTManager& mqtt_manager) const {
     auto[packet, receive_fail] = ReceivePacket();
 
     if (receive_fail || !packet.ValidChecksum()) {
-//#ifdef DEBUG
+#ifdef DEBUG
         std::cout << "Receive Fail Code: " << receive_fail << std::endl;
-//#endif
+#endif
         return false;
     }
-    std::cout << "Receive Success" << std::endl;
 
     if (packet.header().error_code != kOK) {
-        std::cout << "Receive Success but header get error code" << std::endl;
         PublishError(mqtt_manager, kErrorTopic, PacketToString(packet));
     }
 
@@ -66,7 +64,9 @@ void GatewayManager::ParseCommand(ResponsePacket& packet, MQTTManager& mqtt_mana
         default:
             /* ASSERT */
             PublishError(mqtt_manager, kAssertTopic, "ASSERT");
+#ifdef DEBUG
             std::cout << "Parse Command Exception" << std::endl;
+#endif
             return;
     }
 }
@@ -75,7 +75,6 @@ void GatewayManager::ParseMemoryRead(ResponsePacket& packet, MQTTManager& mqtt_m
 
     switch (memory_address) {
         case kTemperatureStart ... kTemperatureEnd:
-            std::cout << "Parse Memory Read : Temperature" << std::endl;
             PublishTemperature(packet, mqtt_manager);
             return;
 
@@ -101,6 +100,7 @@ void GatewayManager::ParseMemoryRead(ResponsePacket& packet, MQTTManager& mqtt_m
 
 void GatewayManager::PublishLedTopic(ResponsePacket& packet, MQTTManager& mqtt_manager) const {
     const auto led_topic = std::move(GetSlaveStateTopic(std::to_string(packet.header().target_id), "led"));
+    std::cout << "Publish Led Topic" << led_topic << std::endl;
 
     /* TODO: Change message */
     mqtt_manager.PublishTopic(led_topic, PacketToString(packet));
@@ -108,7 +108,7 @@ void GatewayManager::PublishLedTopic(ResponsePacket& packet, MQTTManager& mqtt_m
 
 void GatewayManager::PublishMotorTopic(ResponsePacket& packet, MQTTManager& mqtt_manager) const {
     auto motor_topic = std::move(GetSlaveStateTopic(std::to_string(packet.header().target_id), "water"));
-
+    std::cout << "Publish Motor Topic" << std::endl;
     /* TODO: Change message */
     mqtt_manager.PublishTopic(motor_topic, PacketToString(packet));
 }
@@ -123,7 +123,6 @@ std::string GatewayManager::PacketToString(ResponsePacket& packet) const {
     std::stringstream ss;
     for (const auto& data: packet.Packet()) {
         ss << data;
-
     }
 
     auto message = ss.str();
@@ -131,7 +130,7 @@ std::string GatewayManager::PacketToString(ResponsePacket& packet) const {
 }
 
 void GatewayManager::PublishPollingSuccess(MQTTManager& mqtt_manager) const {
-    mqtt_manager.PublishTopic(kPollingTopic, "Polling Success\nCode: " + std::to_string(kOK));
+    mqtt_manager.PublishTopic(kPollingTopic, std::to_string(kOK));
     master_board_.ResetPollingCount();
 }
 
@@ -169,8 +168,10 @@ void GatewayManager::Polling(MQTTManager& mqtt_manager) const {
     static constexpr auto kMaxPollingCount = 10;
     if (master_board_.polling_count() > kMaxPollingCount) {
         /*  TODO: Publish master error message after change protocol  */
-//        std::cout << "Polling Count Over 10" << std::endl;
-//        PublishError(mqtt_manager, kPollingErrorTopic, "no response");
+#ifdef DEBUG
+        std::cout << "Polling Count Over 10" << std::endl;
+#endif
+        PublishError(mqtt_manager, kPollingErrorTopic, "no response");
     }
 
     RequestPacket polling_packet(RequestHeader{0x23, 0x27, 0xff, 0xa0, 0});

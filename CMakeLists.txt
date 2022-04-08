@@ -7,6 +7,10 @@ include_directories(include)
 include_directories(lib/serial/include)
 include_directories(lib/rapidjson/include)
 
+# If Debug Build
+# Then Set DEBUG FLAG
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
+
 # Set App Sources
 # If Create New cpp file
 # Then Import Here

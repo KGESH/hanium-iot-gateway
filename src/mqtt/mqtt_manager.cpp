@@ -11,6 +11,7 @@
 #include "packet/request_packet.h"
 #include "gateway/gateway_manager.h"
 
+
 MQTTManager::MQTTManager(const char* id, const char* host, int port) : mosquittopp(id) {
     std::cout << "Call Constructor" << std::endl;
     mosqpp::lib_init();
@@ -30,7 +31,9 @@ void MQTTManager::on_connect(int rc) {
 }
 
 void MQTTManager::on_subscribe(int mid, int qos_count, const int* granted_qos) {
+#ifdef DEBUG
     std::cout << "Subscription succeeded." << std::endl;
+#endif
 
 }
 
@@ -38,17 +41,20 @@ void MQTTManager::on_message(const struct mosquitto_message* message) {
     std::string topic(message->topic);
     std::string payload(static_cast<char*>(message->payload));
 
+#ifdef DEBUG
     std::cout << "Receive Topic: " << topic << std::endl;
-
+    std::cout << "Receive Payload: " << payload << std::endl;
+#endif
     auto packet = MakePacket(topic, payload);
 
+#ifdef DEBUG
     std::cout << "Packet: ";
-    for (const auto & p: packet) {
-        std:: cout << static_cast<int>(p) << " ";
+    for (const auto& p: packet) {
+        std::cout << static_cast<int>(p) << " ";
     }
     std::cout << std::endl;
+#endif
 
-    /* Write master board*/
     GatewayManager::master_board().serial_port().write(packet);
 }
 
@@ -96,7 +102,9 @@ void MQTTManager::SubscribeTopics() {
 }
 
 void MQTTManager::PublishTopic(const std::string& topic, const std::string& payload) {
+#ifdef DEBUG
     std::cout << "Publish Topic: " << topic << std::endl;
+#endif
     publish(nullptr, topic.c_str(), payload.length(), payload.data());
 }
 
@@ -105,7 +113,9 @@ std::vector<uint8_t> MQTTManager::MakePacket(const std::string& topic, const std
     if (parse_fail) {
         /*  TODO: After log mqtt message to database
          * */
+#ifdef DEBUG
         std::cout << "Parse Fail. Code: " << parse_fail << std::endl;
+#endif
         return {};
     }
 

@@ -73,8 +73,6 @@ enum EParseJsonErrorCode {
     kSuccessParse = 0,
     kFailParsePayload = 1,
     kFailIsNotObject = 2,
-
-
 };
 
 

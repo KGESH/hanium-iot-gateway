@@ -18,13 +18,13 @@
             using namespace std::chrono;
             auto now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
-//            if (now - polling_interval > 3000) {
-//                polling_interval = now;
-//                gateway_manager.Polling(mqtt_manager);
-//            }
+            if (now - polling_interval > 7000) {
+                polling_interval = now;
+                gateway_manager.Polling(mqtt_manager);
+            }
 
             if (gateway_manager.ListeningMaster(mqtt_manager)) {
-                std::cout << "Receive Success!" << std::endl;
+//                std::cout << "Receive Success!" << std::endl;
             }
 
         } else {

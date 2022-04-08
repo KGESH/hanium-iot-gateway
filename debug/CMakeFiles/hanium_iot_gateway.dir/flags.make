@@ -6,5 +6,5 @@ CXX_DEFINES =
 
 CXX_INCLUDES = -I/home/jee/hanium/include -I/home/jee/hanium/lib/serial/include -I/home/jee/hanium/lib/rapidjson/include
 
-CXX_FLAGS = -g -std=gnu++2a
+CXX_FLAGS = -g -DDEBUG -std=gnu++2a
 
