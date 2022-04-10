@@ -197,4 +197,5 @@ CMakeFiles/hanium_iot_gateway.dir/src/gateway/gateway_manager.cpp.o: \
  /usr/include/c++/9/backward/auto_ptr.h /usr/include/c++/9/bit \
  /usr/include/c++/9/pstl/glue_memory_defs.h \
  /usr/include/c++/9/pstl/execution_defs.h \
- /home/jee/hanium/include/mqtt/mqtt_topic.h
+ /home/jee/hanium/include/mqtt/mqtt_topic.h \
+ /home/jee/hanium/include/util/util.h
