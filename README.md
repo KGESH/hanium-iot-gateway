@@ -17,7 +17,7 @@
   - Ubuntu 20.04
   
 
-- [ODROID N2+](https://www.hardkernel.com/ko/shop/odroid-n2-with-4gbyte-ram-2/) (Future..)
+- [ODROID N2+](https://www.hardkernel.com/ko/shop/odroid-n2-with-4gbyte-ram-2/) (Future ...)
   - Arm 64 Architecture
   - Ubuntu 20.04
 
