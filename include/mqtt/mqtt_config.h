@@ -6,7 +6,7 @@
 #define PLANT_GATEWAY_MQTT_CONFIG_H
 
 
-constexpr auto HOST = "3.36.31.237";
+constexpr auto HOST = "api.firmwarebank.co.kr";
 constexpr auto MQTT_PORT = 1883;
 constexpr auto CLIENT_ID = "Client_ID";
 

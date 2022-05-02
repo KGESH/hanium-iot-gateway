@@ -23,7 +23,25 @@ bool GatewayManager::ListeningMaster(MQTTManager& mqtt_manager) const {
 
     if (receive_fail || !packet.ValidChecksum()) {
 #ifdef DEBUG
-        std::cout << "Receive Fail Code: " << receive_fail << std::endl;
+        switch (receive_fail) {
+            case EReceiveErrorCode::kFailReceiveHeader:
+                std::cout << "Wait for receive header.. " << std::endl;
+                break;
+
+            case EReceiveErrorCode::kFailReceiveBodyData:
+                std::cout << "Receive packet Error: Fail to receive body! " << std::endl;
+                break;
+
+            case EReceiveErrorCode::kFailReceiveTail:
+                std::cout << "Receive packet Error: Fail to receive tail! " << std::endl;
+                break;
+
+            case EReceiveErrorCode::kFailOverMaxSlaveCount:
+                std::cout << "Receive packet Error: Max Slave Count Over then 127" << std::endl;
+                break;
+
+
+        }
 #endif
         return false;
     }
