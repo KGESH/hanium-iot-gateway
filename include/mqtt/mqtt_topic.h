@@ -15,7 +15,7 @@ constexpr auto kMasterTopic = "master/";
  * Then Update Gateway ID  */
 const std::string kMasterId = "1";
 
-const auto kAssertTopic = kMasterTopic + kMasterId;
+const auto kAssertTopic = kMasterTopic + kMasterId + "/assert";
 const auto kTemperatureTopic = kMasterTopic + kMasterId + "/temperature";
 const auto kWaterPumpTopic = kMasterTopic + kMasterId + "/water";
 const auto kLedTopic = kMasterTopic + kMasterId + "/led";

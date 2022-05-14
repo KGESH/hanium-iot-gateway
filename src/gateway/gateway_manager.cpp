@@ -14,6 +14,10 @@
 GatewayManager::GatewayManager(const std::string& serial_port_name, int baudrate)
         : master_board_(serial_port_name, baudrate) {}
 
+
+/**
+ * @return master/{MasterId}/slave/{SlaveId}/{SensorName}/state
+ * */
 std::string GatewayManager::GetSlaveStateTopic(const uint8_t slave_id, const std::string& sensor_name) const {
     return kMasterTopic + kMasterId + "/slave/" + std::to_string(slave_id) + "/" + sensor_name + "/state";
 }
@@ -80,9 +84,13 @@ void GatewayManager::ParseCommand(ResponsePacket& packet, MQTTManager& mqtt_mana
             PublishTestPacket(packet, mqtt_manager);
             return;
 
+        case kEmergency:
+            ParseEmergency(packet, mqtt_manager, target_memory_address);
+
+
         default:
             /* ASSERT */
-            PublishError(mqtt_manager, kAssertTopic, "ASSERT");
+            PublishError(mqtt_manager, kAssertTopic, Util::PacketToString(packet));
 #ifdef DEBUG
             std::cout << "Parse Command Exception" << std::endl;
 #endif
@@ -259,4 +267,49 @@ void GatewayManager::RequestTemperature() const {
     const PacketBody body{0x07, 0xd0};
     RequestPacket temperature_packet(header, body);
     master_board_.serial_port().write(temperature_packet.Packet());
+}
+
+void GatewayManager::ParseEmergency(ResponsePacket& packet, MQTTManager& mqtt_manager, uint16_t memory_address) const {
+    switch (memory_address) {
+        case kTemperatureStart ... kTemperatureEnd:
+            /** Todo: Mock Emergency */
+            return;
+
+        case kHumidityStart ... kHumidityEnd:
+            /** Todo: Mock Emergency */
+            return;
+
+            /** Todo: Extract Function */
+        case kMotorStart ... kMotorEnd:
+            PublishSensorStateTopic(packet, mqtt_manager, "water");
+            return;
+
+            /** Todo: Extract Function */
+        case kLedStart ... kLedEnd:
+            PublishSensorStateTopic(packet, mqtt_manager, "led");
+            return;
+
+            /*  TODO: Add Function After Change Protocol  */
+        default:
+            std::cout << "Call Parse Emergency Default Assert" << std::endl;
+            PublishTestPacket(packet, mqtt_manager);
+            return;
+
+    }
+}
+
+void GatewayManager::PublishSensorStateTopic(ResponsePacket& packet, MQTTManager& mqtt_manager,
+                                             std::string&& sensor_name) const {
+    /**
+     * Todo: Check Exception
+     *       패킷 실행시간 > 0 : 실행중
+     *       패킷 실행시간 == 0 : 멈춤
+     *                              len address  cycle runtime  sum end
+     *       수신 패킷: 23 27 11 e0 01 06  0f a2   00 02  00 01    f6 0d
+     * */
+
+    const auto is_running = packet.body().data[2] + packet.body().data[3];
+    const std::string motor_topic = GetSlaveStateTopic(packet.header().target_id, sensor_name);
+    const std::string payload = is_running ? "on" : "off";
+    mqtt_manager.PublishTopic(motor_topic, payload);
 }

@@ -47,9 +47,13 @@ private:
 
     void ParseMemoryRead(ResponsePacket& packet, MQTTManager& mqtt_manager, uint16_t memory_address) const;
 
+    void ParseEmergency(ResponsePacket& packet, MQTTManager& mqtt_manager, uint16_t memory_address) const;
+
     void PublishTestPacket(ResponsePacket& packet, MQTTManager& mqtt_manager) const;
 
     void PublishPollingSuccess(MQTTManager& mqtt_manager) const;
+
+    void PublishSensorStateTopic(ResponsePacket& packet, MQTTManager& mqtt_manager, std::string&& sensor_name) const;
 
     void PublishMotorTopic(ResponsePacket& packet, MQTTManager& mqtt_manager) const;
 

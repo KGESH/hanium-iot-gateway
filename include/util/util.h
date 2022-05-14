@@ -18,8 +18,8 @@ public:
             ss << static_cast<char>(data);
         }
 
-        auto message = ss.str();
-        return message;
+        auto packet_string = ss.str();
+        return packet_string;
     }
 };
 
