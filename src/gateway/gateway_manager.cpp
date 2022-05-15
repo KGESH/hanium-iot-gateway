@@ -108,10 +108,14 @@ void GatewayManager::ParseMemoryRead(ResponsePacket& packet, MQTTManager& mqtt_m
             PublishTestPacket(packet, mqtt_manager);
             return;
 
+            // Todo: <Buffer 23 21 11 c1 80 03 0f a0 aa f2 0d> 핸들링
+            // Topic: 'master/1/slave/17/water/state'
         case kMotorStart ... kMotorEnd:
             PublishMotorTopic(packet, mqtt_manager);
             return;
 
+            //Todo: <Buffer 23 24 11 c1 80 03 0f dc aa 31 0d> 핸들링
+            // Topic: 'master/1/slave/17/led/state'
         case kLedStart ... kLedEnd:
             PublishLedTopic(packet, mqtt_manager);
             return;
@@ -279,12 +283,10 @@ void GatewayManager::ParseEmergency(ResponsePacket& packet, MQTTManager& mqtt_ma
             /** Todo: Mock Emergency */
             return;
 
-            /** Todo: Extract Function */
         case kMotorStart ... kMotorEnd:
             PublishSensorStateTopic(packet, mqtt_manager, "water");
             return;
 
-            /** Todo: Extract Function */
         case kLedStart ... kLedEnd:
             PublishSensorStateTopic(packet, mqtt_manager, "led");
             return;
