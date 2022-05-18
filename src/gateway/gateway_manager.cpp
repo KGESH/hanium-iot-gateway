@@ -86,6 +86,7 @@ void GatewayManager::ParseCommand(ResponsePacket& packet, MQTTManager& mqtt_mana
 
         case kEmergency:
             ParseEmergency(packet, mqtt_manager, target_memory_address);
+            return;
 
 
         default:
@@ -304,10 +305,15 @@ void GatewayManager::PublishSensorStateTopic(ResponsePacket& packet, MQTTManager
      *       패킷 실행시간 == 0 : 멈춤
      *                              len address  cycle runtime  sum end
      *       수신 패킷: 23 27 11 e0 01 06  0f a2   00 02  00 01    f6 0d
+     *                                                high low
      * */
 
-    const auto is_running = packet.body().data[2] + packet.body().data[3];
+    std::cout << "Call PublishSensorStateTopic" << std::endl;
+    const auto runtime_high_byte = packet.body().data[2] << 8;
+    const auto runtime_low_byte = packet.body().data[3];
+    const auto runtime_minutes = runtime_high_byte + runtime_low_byte;
+    std::cout << "Runtime Min: " << runtime_minutes << std::endl;
     const std::string motor_topic = GetSlaveStateTopic(packet.header().target_id, sensor_name);
-    const std::string payload = is_running ? "on" : "off";
+    const auto payload = std::to_string(runtime_minutes);
     mqtt_manager.PublishTopic(motor_topic, payload);
 }
