@@ -342,13 +342,13 @@ void GatewayManager::PublishSensorStateTopic(ResponsePacket& packet, MQTTManager
 
     /**
      * Todo: Validate Emergency Data Length */
-     if (packet.header().data_length  <= 2) {
+    if (packet.header().data_length <= 2) {
 #ifdef DEBUG
-         std::cout << "Call PublishSensorStateTopic Assert" << std::endl;
+        std::cout << "Call PublishSensorStateTopic Assert" << std::endl;
 #endif
-         PublishError(mqtt_manager, kAssertTopic + "/emergencyDataLength", Util::PacketToString(packet));
-         return;
-     }
+        PublishError(mqtt_manager, kAssertTopic + "/emergencyDataLength", Util::PacketToString(packet));
+        return;
+    }
 
     const auto runtime_high_byte = packet.body().data[2] << 8;
     const auto runtime_low_byte = packet.body().data[3];
@@ -369,14 +369,42 @@ GatewayManager::ParseMemoryWrite(ResponsePacket& packet, MQTTManager& mqtt_manag
 
         case kHumidityStart ... kHumidityEnd:
             /** Todo: Assert */
-            PublishError(mqtt_manager, kAssertTopic + "/MemoryWriteHumidity", Util::PacketToString(packet));            return;
+            PublishError(mqtt_manager, kAssertTopic + "/MemoryWriteHumidity", Util::PacketToString(packet));
+            return;
 
         case kMotorStart ... kMotorEnd:
-            PublishMotorTopic(packet, mqtt_manager);
+            /**
+             * Todo: Response to Server
+             *       Extract to Method */
+        {
+            bool success = packet.header().error_code == kOK;
+            auto response_topic =
+                    GetSlaveStateTopic(packet.header().target_id, "water") + "/response" +
+                    (success ? "" : "/fail");
+            /**
+             * Todo : Refactor to JSON */
+
+            mqtt_manager.PublishTopic(response_topic, Util::PacketToString(packet));
+        }
+//            PublishMotorTopic(packet, mqtt_manager);
             return;
 
         case kLedStart ... kLedEnd:
-            PublishLedTopic(packet, mqtt_manager);
+            /**
+             * Todo: Response to Server
+             *       Extract to Method */
+        {
+            bool success = packet.header().error_code == kOK;
+            auto response_topic =
+                    GetSlaveStateTopic(packet.header().target_id, "led") + "/response" +
+                    (success ? "" : "/fail");
+            /**
+             * Todo : Refactor to JSON */
+
+            mqtt_manager.PublishTopic(response_topic, Util::PacketToString(packet));
+        }
+
+//            PublishLedTopic(packet, mqtt_manager);
             return;
 
             /*  TODO: Add Function After Change Protocol  */
