@@ -47,6 +47,8 @@ private:
 
     void ParseMemoryRead(ResponsePacket& packet, MQTTManager& mqtt_manager, uint16_t memory_address) const;
 
+    void ParseMemoryWrite(ResponsePacket& packet, MQTTManager& mqtt_manager, uint16_t memory_address) const;
+
     void ParseEmergency(ResponsePacket& packet, MQTTManager& mqtt_manager, uint16_t memory_address) const;
 
     void PublishTestPacket(ResponsePacket& packet, MQTTManager& mqtt_manager) const;

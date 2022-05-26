@@ -51,6 +51,9 @@ bool GatewayManager::ListeningMaster(MQTTManager& mqtt_manager) const {
     }
 
     if (packet.header().error_code != kOK) {
+#ifdef DEBUG
+        std::cout << "Publish Error topic" << std::endl;
+#endif
         PublishError(mqtt_manager, kErrorTopic, Util::PacketToString(packet));
     }
 
@@ -81,7 +84,8 @@ void GatewayManager::ParseCommand(ResponsePacket& packet, MQTTManager& mqtt_mana
             return;
 
         case kMemoryWrite:
-            PublishTestPacket(packet, mqtt_manager);
+            ParseMemoryWrite(packet, mqtt_manager, target_memory_address);
+//            PublishTestPacket(packet, mqtt_manager);
             return;
 
         case kEmergency:
@@ -91,10 +95,10 @@ void GatewayManager::ParseCommand(ResponsePacket& packet, MQTTManager& mqtt_mana
 
         default:
             /* ASSERT */
-            PublishError(mqtt_manager, kAssertTopic, Util::PacketToString(packet));
 #ifdef DEBUG
             std::cout << "Parse Command Exception" << std::endl;
 #endif
+            PublishError(mqtt_manager, kAssertTopic + "/ParseDefault", Util::PacketToString(packet));
             return;
     }
 }
@@ -106,20 +110,37 @@ void GatewayManager::ParseMemoryRead(ResponsePacket& packet, MQTTManager& mqtt_m
             return;
 
         case kHumidityStart ... kHumidityEnd:
+            /** Todo: Assert */
+            PublishError(mqtt_manager, kAssertTopic + "/MemReadHumidity", Util::PacketToString(packet));
             PublishTestPacket(packet, mqtt_manager);
             return;
 
         case kMotorStart ... kMotorEnd:
+#ifdef DEBUG
+            /** Todo: Assert */
+            PublishError(mqtt_manager, kAssertTopic + "/MemReadMotor", Util::PacketToString(packet));
+
+#endif
             PublishMotorTopic(packet, mqtt_manager);
             return;
 
         case kLedStart ... kLedEnd:
+#ifdef DEBUG
+            /** Todo: Assert */
+            PublishError(mqtt_manager, kAssertTopic + "/MemReadLed", Util::PacketToString(packet));
+
+#endif
             PublishLedTopic(packet, mqtt_manager);
             return;
 
             /*  TODO: Add Function After Change Protocol  */
         default:
-            PublishTestPacket(packet, mqtt_manager);
+#ifdef DEBUG
+            /** Todo: Assert */
+            PublishError(mqtt_manager, kAssertTopic + "/MemReadDefault", Util::PacketToString(packet));
+
+#endif
+//            PublishTestPacket(packet, mqtt_manager);
             return;
 
     }
@@ -274,24 +295,35 @@ void GatewayManager::ParseEmergency(ResponsePacket& packet, MQTTManager& mqtt_ma
     switch (memory_address) {
         case kTemperatureStart ... kTemperatureEnd:
             /** Todo: Mock Emergency */
+            PublishError(mqtt_manager, kAssertTopic + "/EmergencyTemperature", Util::PacketToString(packet));
+
             return;
 
         case kHumidityStart ... kHumidityEnd:
             /** Todo: Mock Emergency */
+            PublishError(mqtt_manager, kAssertTopic + "/EmergencyHumidity", Util::PacketToString(packet));
             return;
 
         case kMotorStart ... kMotorEnd:
+#ifdef DEBUG
+            PublishError(mqtt_manager, kAssertTopic + "/EmergencyMotor", Util::PacketToString(packet));
+#endif
             PublishSensorStateTopic(packet, mqtt_manager, "water");
             return;
 
         case kLedStart ... kLedEnd:
+#ifdef DEBUG
+            PublishError(mqtt_manager, kAssertTopic + "/EmergencyLed", Util::PacketToString(packet));
+#endif
             PublishSensorStateTopic(packet, mqtt_manager, "led");
             return;
 
             /*  TODO: Add Function After Change Protocol  */
         default:
+#ifdef DEBUG
             std::cout << "Call Parse Emergency Default Assert" << std::endl;
-            PublishTestPacket(packet, mqtt_manager);
+#endif
+            PublishError(mqtt_manager, kAssertTopic + "/EmergencyDefault", Util::PacketToString(packet));
             return;
 
     }
@@ -308,7 +340,16 @@ void GatewayManager::PublishSensorStateTopic(ResponsePacket& packet, MQTTManager
      *                                                high low
      * */
 
-    std::cout << "Call PublishSensorStateTopic" << std::endl;
+    /**
+     * Todo: Validate Emergency Data Length */
+     if (packet.header().data_length  <= 2) {
+#ifdef DEBUG
+         std::cout << "Call PublishSensorStateTopic Assert" << std::endl;
+#endif
+         PublishError(mqtt_manager, kAssertTopic + "/emergencyDataLength", Util::PacketToString(packet));
+         return;
+     }
+
     const auto runtime_high_byte = packet.body().data[2] << 8;
     const auto runtime_low_byte = packet.body().data[3];
     const auto runtime_minutes = runtime_high_byte + runtime_low_byte;
@@ -316,4 +357,36 @@ void GatewayManager::PublishSensorStateTopic(ResponsePacket& packet, MQTTManager
     const std::string motor_topic = GetSlaveStateTopic(packet.header().target_id, sensor_name);
     const auto payload = std::to_string(runtime_minutes);
     mqtt_manager.PublishTopic(motor_topic, payload);
+}
+
+void
+GatewayManager::ParseMemoryWrite(ResponsePacket& packet, MQTTManager& mqtt_manager, uint16_t memory_address) const {
+    switch (memory_address) {
+        case kTemperatureStart ... kTemperatureEnd:
+            /** Todo: Assert */
+            PublishError(mqtt_manager, kAssertTopic + "/MemoryWriteTemperature", Util::PacketToString(packet));
+            return;
+
+        case kHumidityStart ... kHumidityEnd:
+            /** Todo: Assert */
+            PublishError(mqtt_manager, kAssertTopic + "/MemoryWriteHumidity", Util::PacketToString(packet));            return;
+
+        case kMotorStart ... kMotorEnd:
+            PublishMotorTopic(packet, mqtt_manager);
+            return;
+
+        case kLedStart ... kLedEnd:
+            PublishLedTopic(packet, mqtt_manager);
+            return;
+
+            /*  TODO: Add Function After Change Protocol  */
+        default:
+#ifdef DEBUG
+            std::cout << "Parse Memory Write Default Assert" << std::endl;
+#endif
+            PublishError(mqtt_manager, kAssertTopic + "/MemoryWriteDefault", Util::PacketToString(packet));
+            return;
+
+    }
+
 }
