@@ -47,7 +47,7 @@
 ### Install Mosquitto Dev Library
 
 <pre>sudo apt-get update -y</pre>
-<pre>sudo apt-get install -y libmosquitto-dev</pre>
+<pre>sudo apt-get install -y libmosquitto-dev libmosquittopp-dev</pre>
 
 ### Download from repository
 
