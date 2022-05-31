@@ -83,8 +83,9 @@ void MQTTManager::SubscribeTopics() {
 
 
     /*  Output Sensor */
-    GetInstance().subscribe(nullptr, kLedTopic.c_str());
     GetInstance().subscribe(nullptr, kWaterPumpTopic.c_str());
+    GetInstance().subscribe(nullptr, kLedTopic.c_str());
+    GetInstance().subscribe(nullptr, kFanTopic.c_str());
 
 
     /*  IO Sensor */

@@ -61,6 +61,8 @@ private:
 
     void PublishLedTopic(ResponsePacket& packet, MQTTManager& mqtt_manager) const;
 
+    void PublishFanTopic(ResponsePacket& packet, MQTTManager& mqtt_manager) const;
+
     std::string GetSlaveStateTopic(uint8_t slave_id, const std::string& sensor_name) const;
 
     MasterBoard master_board_;

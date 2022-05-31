@@ -35,10 +35,10 @@ enum EMemoryMap {
     kMotorEnd = 4059,
     kLedStart = 4060,
     kLedEnd = 4119,
+    kFanStart = 4120,
+    kFanEnd = 4179,
 
-    kFanStart = 5017,
     kOutputMemoryEnd = 6000,
-
     kControlStart = 6001,
     kInsideLedStart = 6509, // Need Rename
     kMachineStart = 7017,    // Need Rename

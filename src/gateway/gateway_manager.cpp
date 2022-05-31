@@ -44,7 +44,9 @@ bool GatewayManager::ListeningMaster(MQTTManager& mqtt_manager) const {
                 std::cout << "Receive packet Error: Max Slave Count Over then 127" << std::endl;
                 break;
 
-
+            default:
+                std::cout << "Receive Fail Assert!" << std::endl;
+                break;
         }
 #endif
         return false;
@@ -133,6 +135,15 @@ void GatewayManager::ParseMemoryRead(ResponsePacket& packet, MQTTManager& mqtt_m
             PublishLedTopic(packet, mqtt_manager);
             return;
 
+        case kFanStart ... kFanEnd:
+#ifdef DEBUG
+            /** Todo: Assert */
+            PublishError(mqtt_manager, kAssertTopic + "/MemReadFan", Util::PacketToString(packet));
+#endif
+            PublishFanTopic(packet, mqtt_manager);
+            return;
+
+
             /*  TODO: Add Function After Change Protocol  */
         default:
 #ifdef DEBUG
@@ -159,6 +170,13 @@ void GatewayManager::PublishMotorTopic(ResponsePacket& packet, MQTTManager& mqtt
     /* TODO: Change message */
     mqtt_manager.PublishTopic(motor_topic, Util::PacketToString(packet));
 }
+
+void GatewayManager::PublishFanTopic(ResponsePacket& packet, MQTTManager& mqtt_manager) const {
+    auto fan_topic = std::move(GetSlaveStateTopic(packet.header().target_id, "fan"));
+    /* TODO: Change message */
+    mqtt_manager.PublishTopic(fan_topic, Util::PacketToString(packet));
+}
+
 
 void GatewayManager::PublishTestPacket(ResponsePacket& packet, MQTTManager& mqtt_manager) const {
     auto message(Util::PacketToString(packet));
@@ -318,6 +336,12 @@ void GatewayManager::ParseEmergency(ResponsePacket& packet, MQTTManager& mqtt_ma
             PublishSensorStateTopic(packet, mqtt_manager, "led");
             return;
 
+        case kFanStart ... kFanEnd:
+#ifdef DEBUG
+            PublishError(mqtt_manager, kAssertTopic + "/EmergencyFan", Util::PacketToString(packet));
+#endif
+            PublishSensorStateTopic(packet, mqtt_manager, "fan");
+
             /*  TODO: Add Function After Change Protocol  */
         default:
 #ifdef DEBUG
@@ -405,6 +429,22 @@ GatewayManager::ParseMemoryWrite(ResponsePacket& packet, MQTTManager& mqtt_manag
         }
 
 //            PublishLedTopic(packet, mqtt_manager);
+            return;
+
+        case kFanStart ... kFanEnd:
+            /**
+             * Todo: Response to Server
+             *       Extract to Method */
+        {
+            bool success = packet.header().error_code == kOK;
+            auto response_topic =
+                    GetSlaveStateTopic(packet.header().target_id, "fan") + "/response" +
+                    (success ? "" : "/fail");
+            /**
+             * Todo : Refactor to JSON */
+
+            mqtt_manager.PublishTopic(response_topic, Util::PacketToString(packet));
+        }
             return;
 
             /*  TODO: Add Function After Change Protocol  */

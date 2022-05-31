@@ -19,6 +19,8 @@ const auto kAssertTopic = kMasterTopic + kMasterId + "/assert";
 const auto kTemperatureTopic = kMasterTopic + kMasterId + "/temperature";
 const auto kWaterPumpTopic = kMasterTopic + kMasterId + "/water";
 const auto kLedTopic = kMasterTopic + kMasterId + "/led";
+const auto kFanTopic = kMasterTopic + kMasterId + "/fan";
+
 
 
 const auto kErrorTopic = kMasterTopic + kMasterId + "/error";
