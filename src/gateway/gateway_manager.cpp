@@ -151,7 +151,6 @@ void GatewayManager::ParseMemoryRead(ResponsePacket& packet, MQTTManager& mqtt_m
             PublishError(mqtt_manager, kAssertTopic + "/MemReadDefault", Util::PacketToString(packet));
 
 #endif
-//            PublishTestPacket(packet, mqtt_manager);
             return;
 
     }

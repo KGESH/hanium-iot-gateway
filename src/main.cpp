@@ -24,7 +24,7 @@
                 gateway_manager.Polling(mqtt_manager);
             }
 
-            if (now - temperature_interval > 5000) {
+            if (now - temperature_interval > 15000) {
                 temperature_interval = now;
                 gateway_manager.RequestTemperature();
             }

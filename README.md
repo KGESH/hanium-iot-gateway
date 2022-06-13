@@ -36,15 +36,15 @@
 - [Serial](https://github.com/wjwwood/serial)
 
 
-## Linux Dev Setup
+## How to build
 
 ---
 
-### Install Build Tools
+### Install build tools
 <pre>sudo apt-get update -y</pre>
 <pre>sudo apt-get install -y build-essential</pre>
 
-### Install Mosquitto Dev Library
+### Install Mosquitto dev library
 
 <pre>sudo apt-get update -y</pre>
 <pre>sudo apt-get install -y libmosquitto-dev libmosquittopp-dev</pre>
@@ -57,6 +57,17 @@
 
 <pre>cd hanium-iot-gateway</pre>
 
-### CMake Build With Your IDE
+### CMake build with your IDE
 
-### Build
+### Build to target machine
+
+## How to run
+
+---
+
+#### 1. Check your MQTT message broker
+#### 2. Connect serial cable to master board
+#### 3. Execute binary sudo (serial port need sudo permission!)
+
+<pre>sudo ./hanium_iot_gateway</pre>
+

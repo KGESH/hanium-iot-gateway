@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <vector>
+#include <thread>
 #include "mqtt/mqtt_config.h"
 #include "mqtt/mqtt_manager.h"
 #include "mqtt/mqtt_topic.h"
@@ -56,6 +57,8 @@ void MQTTManager::on_message(const struct mosquitto_message* message) {
 #endif
 
     GatewayManager::master_board().serial_port().write(packet);
+    using namespace std::chrono_literals;
+    std::this_thread::sleep_for(500ms);
 }
 
 MQTTManager& MQTTManager::GetInstance() {
