@@ -10,7 +10,7 @@
 #include "mosquittopp.h"
 #include "protocol/protocol.h"
 
-#define DEFAULT_KEEP_ALIVE 60
+#define DEFAULT_KEEP_ALIVE 10
 
 
 class MQTTManager : public mosqpp::mosquittopp {
@@ -38,6 +38,8 @@ private:
     static void SubscribeTopics();
 
     void on_connect(int rc) override;
+
+    void on_disconnect(int rc) override;
 
     /* Callback when mqtt message arrived */
     void on_message(const struct mosquitto_message* message) override;

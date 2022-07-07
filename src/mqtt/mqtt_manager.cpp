@@ -17,6 +17,9 @@ MQTTManager::MQTTManager(const char* id, const char* host, int port) : mosquitto
     std::cout << "Call Constructor" << std::endl;
     mosqpp::lib_init();
     int keepalive = DEFAULT_KEEP_ALIVE;
+    /** Todo: Extract after */
+    std::string mock_payload = "hello, LWT";
+    will_set("lwt/1", mock_payload.length(), mock_payload.c_str(), 1);
     connect(host, port, keepalive);
 }
 
@@ -30,6 +33,13 @@ void MQTTManager::on_connect(int rc) {
     SubscribeTopics();
 
 }
+
+
+void MQTTManager::on_disconnect(int rc) {
+    std::cout << "disconnect broker! - " << rc << std::endl;
+    PublishTopic("dis/1", "disconnect");
+}
+
 
 void MQTTManager::on_subscribe(int mid, int qos_count, const int* granted_qos) {
 #ifdef DEBUG

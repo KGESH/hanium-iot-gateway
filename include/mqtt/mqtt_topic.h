@@ -31,8 +31,10 @@ const auto kWriteMasterMemoryTopic = kMasterTopic + kMasterId + "/write";
 const auto kTestRawPacket = "test-raw-packet";
 const auto kTestResponsePacket = "test-res-packet";
 
+const auto kLastWillTopic = "disconnect";
 
 constexpr auto kTestPollingOKMessage = "Polling OK";
 constexpr auto kTestPollingErrorMessage = "Polling Error";
+
 
 #endif //PLANT_GATEWAY_MQTT_TOPIC_H
