@@ -7,7 +7,7 @@ on:
 
 
   # Allows you to run this workflow manually from the Actions tab
-#  workflow_dispatch:
+  workflow_dispatch:
 
 jobs:
   push-to-gitlab:
@@ -21,7 +21,7 @@ jobs:
           fetch-depth: 0 # Fetch all history for all tags and branches
 
       - name: Set remote repository
-        env: # Retrieve env variable from GiGHub secrets
+        env: # Retrieve env variable from GitHub secrets
           gitlab_url: ${{ secrets.TARGET_URL }}
           gitlab_username: ${{ secrets.TARGET_USERNAME }}
           gitlab_token: ${{ secrets.TARGET_TOKEN }}
