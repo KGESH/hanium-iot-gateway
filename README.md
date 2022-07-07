@@ -6,7 +6,6 @@
 
 ---
 
-hanium gitlab mirror test
 
 ## Environment
 
