@@ -7,6 +7,10 @@
 
 #include <iostream>
 #include <vector>
+#include <queue>
+#include <memory>
+#include <mutex>
+#include <condition_variable>
 #include "mosquittopp.h"
 #include "protocol/protocol.h"
 
@@ -18,24 +22,25 @@ public:
 
     MQTTManager() = delete;
 
+    MQTTManager(const char* id, const char* host, int port, const std::queue<std::vector<uint8_t>>& mqtt_packet_queue,
+                std::mutex& g_mqtt_queue_mutex,
+                std::condition_variable& g_cv);
+
     MQTTManager(const MQTTManager&) = delete;
 
     MQTTManager& operator=(const MQTTManager&) = delete;
 
-    static MQTTManager& GetInstance();
-
     ~MQTTManager() override;
 
-    static void Reconnect();
+    void Reconnect();
 
-    static bool IsConnected();
+    bool IsConnected();
 
     void PublishTopic(const std::string& topic, const std::string& payload);
 
 private:
-    MQTTManager(const char* id, const char* host, int port);
 
-    static void SubscribeTopics();
+    void SubscribeTopics();
 
     void on_connect(int rc) override;
 
@@ -48,7 +53,12 @@ private:
 
     std::vector<uint8_t> MakePacket(const std::string& topic, const std::string& payload);
 
-    std::pair<std::vector<uint8_t>, EParseJsonErrorCode> ParseMqttMessage(const std::string& topic, const std::string& payload);
+    std::pair<std::vector<uint8_t>, EParseJsonErrorCode>
+    ParseMqttMessage(const std::string& topic, const std::string& payload);
+
+    std::unique_ptr<std::queue<std::vector<uint8_t>>> mqtt_receive_packets;
+    std::mutex& g_mqtt_queue_mutex;
+    std::condition_variable& g_cv;
 };
 
 #endif //PLANT_GATEWAY_MQTT_MANAGER_H

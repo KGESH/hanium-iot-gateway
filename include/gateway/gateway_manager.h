@@ -5,6 +5,8 @@
 #ifndef PLANT_GATEWAY_GATEWAY_MANAGER_H
 #define PLANT_GATEWAY_GATEWAY_MANAGER_H
 
+#include <memory>
+#include <queue>
 #include "protocol/protocol.h"
 #include "mqtt/mqtt_manager.h"
 #include "packet/response_packet.h"
@@ -22,9 +24,9 @@ public:
 
     const GatewayManager& operator=(const GatewayManager&) = delete;
 
-    static const GatewayManager& GetInstance();
-
-    static const MasterBoard& master_board();
+    GatewayManager(const std::string& serial_port_name, int baudrate,
+                   const std::queue<std::vector<uint8_t>>& mqtt_receive_packets, std::mutex& g_mqtt_queue_mutex,
+                   std::condition_variable& g_cv);
 
     bool ListeningMaster(MQTTManager& mqtt_manager) const;
 
@@ -34,10 +36,12 @@ public:
 
     void RequestTemperature() const;
 
+    /** Todo: Run Worker Thread */
+    void WriteMqttPacket() const;
+
 
 private:
 
-    GatewayManager(const std::string& serial_port_name, int baudrate);
 
     std::pair<ResponsePacket, EReceiveErrorCode> ReceivePacket() const;
 
@@ -66,6 +70,10 @@ private:
     std::string GetSlaveStateTopic(uint8_t slave_id, const std::string& sensor_name) const;
 
     MasterBoard master_board_;
+
+    std::unique_ptr<std::queue<std::vector<uint8_t>>> mqtt_receive_packets;
+    std::mutex& g_mqtt_queue_mutex;
+    std::condition_variable& g_cv;
 };
 
 #endif //PLANT_GATEWAY_GATEWAY_MANAGER_H

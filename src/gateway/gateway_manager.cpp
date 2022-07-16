@@ -3,7 +3,8 @@
 //
 
 #include <cmath>
-#include "master/master_config.h"
+#include <chrono>
+#include <thread>
 #include "gateway/gateway_manager.h"
 #include "mqtt/mqtt_manager.h"
 #include "mqtt/mqtt_topic.h"
@@ -11,8 +12,13 @@
 #include "util/util.h"
 
 
-GatewayManager::GatewayManager(const std::string& serial_port_name, int baudrate)
-        : master_board_(serial_port_name, baudrate) {}
+GatewayManager::GatewayManager(const std::string& serial_port_name, int baudrate,
+                               const std::queue<std::vector<uint8_t>>& mqtt_receive_packets,
+                               std::mutex& g_mqtt_queue_mutex,
+                               std::condition_variable& g_cv)
+        : master_board_(serial_port_name, baudrate),
+          mqtt_receive_packets(std::make_unique<std::queue<std::vector<uint8_t>>>(mqtt_receive_packets)),
+          g_mqtt_queue_mutex(g_mqtt_queue_mutex), g_cv(g_cv) {}
 
 
 /**
@@ -52,12 +58,12 @@ bool GatewayManager::ListeningMaster(MQTTManager& mqtt_manager) const {
         return false;
     }
 
-    if (packet.header().error_code != kOK) {
 #ifdef DEBUG
+    if (packet.header().error_code != kOK) {
         std::cout << "Publish Error topic" << std::endl;
-#endif
         PublishError(mqtt_manager, kErrorTopic, Util::PacketToString(packet));
     }
+#endif
 
     ParseCommand(packet, mqtt_manager);
     return true;
@@ -288,15 +294,6 @@ GatewayManager::PublishError(MQTTManager& mqtt_manager, const std::string& topic
     mqtt_manager.PublishTopic(topic, message);
 }
 
-const GatewayManager& GatewayManager::GetInstance() {
-    static GatewayManager instance = GatewayManager(SERIAL_PORT, BAUDRATE);
-
-    return instance;
-}
-
-const MasterBoard& GatewayManager::master_board() {
-    return GetInstance().master_board_;
-}
 
 void GatewayManager::RequestTemperature() const {
     /* TODO: after iterator all slave id
@@ -457,3 +454,26 @@ GatewayManager::ParseMemoryWrite(ResponsePacket& packet, MQTTManager& mqtt_manag
     }
 
 }
+
+void GatewayManager::WriteMqttPacket() const {
+    using namespace std::chrono_literals;
+    while (true) {
+//        std::cout << "Check Queue\n";
+        std::cout << "Q item size: " << mqtt_receive_packets->size() << std::endl;
+        {
+            std::unique_lock<std::mutex> lock(g_mqtt_queue_mutex);
+            g_cv.wait(lock, [&]() { return mqtt_receive_packets->empty(); });
+                auto packet = mqtt_receive_packets->front();
+                mqtt_receive_packets->pop();
+                master_board_.serial_port().write(packet);
+                std::cout << "MQTT Write Done\n";
+                std::this_thread::sleep_for(500ms);
+//            while (!mqtt_receive_packets->empty()) {
+//            }
+
+        }
+
+        std::this_thread::sleep_for(100ms);
+    }
+}
+

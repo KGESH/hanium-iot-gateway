@@ -3,6 +3,7 @@ project(hanium_iot_gateway)
 
 set(CMAKE_CXX_STANDARD 20)
 
+
 include_directories(include)
 include_directories(lib/serial/include)
 include_directories(lib/rapidjson/include)
@@ -43,3 +44,7 @@ include(GNUInstallDirs)
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 install(FILES MosquittoInterface.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
+# Link Thread Library
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+target_link_libraries(${PROJECT_NAME} Threads::Threads)

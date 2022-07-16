@@ -3,17 +3,24 @@
 //
 
 #include <iostream>
+#include <utility>
+#include <memory>
+#include <queue>
 #include <vector>
-#include <thread>
-#include "mqtt/mqtt_config.h"
 #include "mqtt/mqtt_manager.h"
 #include "mqtt/mqtt_topic.h"
+#include "mqtt/mqtt_config.h"
 #include "rapidjson/document.h"
 #include "packet/request_packet.h"
-#include "gateway/gateway_manager.h"
 
+MQTTManager::MQTTManager(const char* id, const char* host, int port,
+                         const std::queue<std::vector<uint8_t>>& mqtt_packet_queue,
+                         std::mutex& g_mqtt_queue_mutex,
+                         std::condition_variable& g_cv
 
-MQTTManager::MQTTManager(const char* id, const char* host, int port) : mosquittopp(id) {
+)
+        : mosquittopp(id), mqtt_receive_packets(std::make_unique<std::queue<std::vector<uint8_t>>>(mqtt_packet_queue)),
+          g_mqtt_queue_mutex(g_mqtt_queue_mutex), g_cv(g_cv) {
     std::cout << "Call Constructor" << std::endl;
     mosqpp::lib_init();
     int keepalive = DEFAULT_KEEP_ALIVE;
@@ -48,6 +55,7 @@ void MQTTManager::on_subscribe(int mid, int qos_count, const int* granted_qos) {
 
 }
 
+
 void MQTTManager::on_message(const struct mosquitto_message* message) {
     std::string topic(message->topic);
     std::string payload(static_cast<char*>(message->payload));
@@ -66,22 +74,24 @@ void MQTTManager::on_message(const struct mosquitto_message* message) {
     std::cout << std::endl;
 #endif
 
-    GatewayManager::master_board().serial_port().write(packet);
-    using namespace std::chrono_literals;
-    std::this_thread::sleep_for(500ms);
-}
+    {
+        std::unique_lock<std::mutex> lock(g_mqtt_queue_mutex);
+        mqtt_receive_packets->push(packet);
 
-MQTTManager& MQTTManager::GetInstance() {
-    static MQTTManager mqtt_manager(CLIENT_ID, HOST, MQTT_PORT);
-    return mqtt_manager;
+        g_cv.notify_one();
+    }
+//    Todo: Remove comment
+//    GatewayManager::master_board().serial_port().write(packet);
+//    using namespace std::chrono_literals;
+//    std::this_thread::sleep_for(500ms);
 }
 
 void MQTTManager::Reconnect() {
-    GetInstance().reconnect();
+    reconnect();
 }
 
 bool MQTTManager::IsConnected() {
-    const auto return_code = GetInstance().loop();
+    const auto return_code = loop();
 
     if (return_code == MOSQ_ERR_SUCCESS) {
         return true;
@@ -92,13 +102,13 @@ bool MQTTManager::IsConnected() {
 
 void MQTTManager::SubscribeTopics() {
     /*  Input Sensor  */
-    GetInstance().subscribe(nullptr, kTemperatureTopic.c_str());
+    subscribe(nullptr, kTemperatureTopic.c_str());
 
 
     /*  Output Sensor */
-    GetInstance().subscribe(nullptr, kWaterPumpTopic.c_str());
-    GetInstance().subscribe(nullptr, kLedTopic.c_str());
-    GetInstance().subscribe(nullptr, kFanTopic.c_str());
+    subscribe(nullptr, kWaterPumpTopic.c_str());
+    subscribe(nullptr, kLedTopic.c_str());
+    subscribe(nullptr, kFanTopic.c_str());
 
 
     /*  IO Sensor */
@@ -106,13 +116,13 @@ void MQTTManager::SubscribeTopics() {
 
 
     /*  Master Only */
-    GetInstance().subscribe(nullptr, kReadMasterMemoryTopic.c_str());
-    GetInstance().subscribe(nullptr, kWriteMasterMemoryTopic.c_str());
+    subscribe(nullptr, kReadMasterMemoryTopic.c_str());
+    subscribe(nullptr, kWriteMasterMemoryTopic.c_str());
 
 
     /*  Message Test  */
-    GetInstance().subscribe(nullptr, kTestRawPacket);
-    GetInstance().subscribe(nullptr, "test/topic");
+    subscribe(nullptr, kTestRawPacket);
+    subscribe(nullptr, "test/topic");
 }
 
 void MQTTManager::PublishTopic(const std::string& topic, const std::string& payload) {
