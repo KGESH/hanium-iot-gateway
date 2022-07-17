@@ -7,6 +7,10 @@
 
 /*  TODO: Extract Status Code After..  */
 #include <cstdint>
+#include <vector>
+#include <queue>
+
+typedef std::queue<std::vector<uint8_t>> RAW_PACKET_Q;
 
 enum EMasterProtocol {
     kStart = 0x23,

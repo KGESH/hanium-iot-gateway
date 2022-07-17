@@ -25,8 +25,8 @@ public:
     const GatewayManager& operator=(const GatewayManager&) = delete;
 
     GatewayManager(const std::string& serial_port_name, int baudrate,
-                   const std::queue<std::vector<uint8_t>>& mqtt_receive_packets, std::mutex& g_mqtt_queue_mutex,
-                   std::condition_variable& g_cv);
+                   RAW_PACKET_Q* mqtt_packet_queue, std::mutex* g_mqtt_queue_mutex,
+                   std::condition_variable* g_cv);
 
     bool ListeningMaster(MQTTManager& mqtt_manager) const;
 
@@ -37,8 +37,11 @@ public:
     void RequestTemperature() const;
 
     /** Todo: Run Worker Thread */
-    void WriteMqttPacket() const;
-
+    void WritePacket() const;
+//    std::shared_ptr<RAW_PACKET_Q> raw_packet_queue;
+    RAW_PACKET_Q* raw_packet_queue;
+    std::mutex* g_mqtt_queue_mutex;
+    std::condition_variable* g_cv;
 
 private:
 
@@ -71,9 +74,7 @@ private:
 
     MasterBoard master_board_;
 
-    std::unique_ptr<std::queue<std::vector<uint8_t>>> mqtt_receive_packets;
-    std::mutex& g_mqtt_queue_mutex;
-    std::condition_variable& g_cv;
+
 };
 
 #endif //PLANT_GATEWAY_GATEWAY_MANAGER_H

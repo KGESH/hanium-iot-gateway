@@ -13,11 +13,11 @@
 
 
 GatewayManager::GatewayManager(const std::string& serial_port_name, int baudrate,
-                               const std::queue<std::vector<uint8_t>>& mqtt_receive_packets,
-                               std::mutex& g_mqtt_queue_mutex,
-                               std::condition_variable& g_cv)
+                               RAW_PACKET_Q* mqtt_packet_queue,
+                               std::mutex* g_mqtt_queue_mutex,
+                               std::condition_variable* g_cv)
         : master_board_(serial_port_name, baudrate),
-          mqtt_receive_packets(std::make_unique<std::queue<std::vector<uint8_t>>>(mqtt_receive_packets)),
+          raw_packet_queue(mqtt_packet_queue),
           g_mqtt_queue_mutex(g_mqtt_queue_mutex), g_cv(g_cv) {}
 
 
@@ -33,27 +33,27 @@ bool GatewayManager::ListeningMaster(MQTTManager& mqtt_manager) const {
 
     if (receive_fail || !packet.ValidChecksum()) {
 #ifdef DEBUG
-        switch (receive_fail) {
-            case EReceiveErrorCode::kFailReceiveHeader:
-                std::cout << "Wait for receive header.. " << std::endl;
-                break;
-
-            case EReceiveErrorCode::kFailReceiveBodyData:
-                std::cout << "Receive packet Error: Fail to receive body! " << std::endl;
-                break;
-
-            case EReceiveErrorCode::kFailReceiveTail:
-                std::cout << "Receive packet Error: Fail to receive tail! " << std::endl;
-                break;
-
-            case EReceiveErrorCode::kFailOverMaxSlaveCount:
-                std::cout << "Receive packet Error: Max Slave Count Over then 127" << std::endl;
-                break;
-
-            default:
-                std::cout << "Receive Fail Assert!" << std::endl;
-                break;
-        }
+//        switch (receive_fail) {
+//            case EReceiveErrorCode::kFailReceiveHeader:
+//                std::cout << "Wait for receive header.. " << std::endl;
+//                break;
+//
+//            case EReceiveErrorCode::kFailReceiveBodyData:
+//                std::cout << "Receive packet Error: Fail to receive body! " << std::endl;
+//                break;
+//
+//            case EReceiveErrorCode::kFailReceiveTail:
+//                std::cout << "Receive packet Error: Fail to receive tail! " << std::endl;
+//                break;
+//
+//            case EReceiveErrorCode::kFailOverMaxSlaveCount:
+//                std::cout << "Receive packet Error: Max Slave Count Over then 127" << std::endl;
+//                break;
+//
+//            default:
+//                std::cout << "Receive Fail Assert!" << std::endl;
+//                break;
+//        }
 #endif
         return false;
     }
@@ -455,25 +455,23 @@ GatewayManager::ParseMemoryWrite(ResponsePacket& packet, MQTTManager& mqtt_manag
 
 }
 
-void GatewayManager::WriteMqttPacket() const {
+void GatewayManager::WritePacket() const {
     using namespace std::chrono_literals;
     while (true) {
-//        std::cout << "Check Queue\n";
-        std::cout << "Q item size: " << mqtt_receive_packets->size() << std::endl;
         {
-            std::unique_lock<std::mutex> lock(g_mqtt_queue_mutex);
-            g_cv.wait(lock, [&]() { return mqtt_receive_packets->empty(); });
-                auto packet = mqtt_receive_packets->front();
-                mqtt_receive_packets->pop();
-                master_board_.serial_port().write(packet);
-                std::cout << "MQTT Write Done\n";
-                std::this_thread::sleep_for(500ms);
-//            while (!mqtt_receive_packets->empty()) {
-//            }
+            std::unique_lock<std::mutex> lock(*g_mqtt_queue_mutex);
+            g_cv->wait(lock, [&]() { return !raw_packet_queue->empty(); });
+            auto packet = raw_packet_queue->front();
+            raw_packet_queue->pop();
+            master_board_.serial_port().write(packet);
+            std::cout << "Packet Write Done\n";
+            std::this_thread::sleep_for(500ms);
+
 
         }
+//            std::this_thread::sleep_for(500ms);
 
-        std::this_thread::sleep_for(100ms);
+//        std::this_thread::sleep_for(100ms);
     }
 }
 

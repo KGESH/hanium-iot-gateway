@@ -28,7 +28,7 @@ public:
     static int polling_count();
 
 private:
-    std::unique_ptr<serial::Serial> serial_port_;
+    std::shared_ptr<serial::Serial> serial_port_;
     static int polling_count_;
 };
 

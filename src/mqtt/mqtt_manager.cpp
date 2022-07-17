@@ -14,12 +14,15 @@
 #include "packet/request_packet.h"
 
 MQTTManager::MQTTManager(const char* id, const char* host, int port,
-                         const std::queue<std::vector<uint8_t>>& mqtt_packet_queue,
-                         std::mutex& g_mqtt_queue_mutex,
-                         std::condition_variable& g_cv
+//                         const std::queue<std::vector<uint8_t>>& mqtt_packet_queue,
+                         RAW_PACKET_Q* mqtt_packet_queue,
+                         std::mutex* g_mqtt_queue_mutex,
+                         std::condition_variable* g_cv
 
 )
-        : mosquittopp(id), mqtt_receive_packets(std::make_unique<std::queue<std::vector<uint8_t>>>(mqtt_packet_queue)),
+        : mosquittopp(id),
+//          raw_packet_queue(std::make_shared<RAW_PACKET_Q>(mqtt_packet_queue)),
+          raw_packet_queue(mqtt_packet_queue),
           g_mqtt_queue_mutex(g_mqtt_queue_mutex), g_cv(g_cv) {
     std::cout << "Call Constructor" << std::endl;
     mosqpp::lib_init();
@@ -75,11 +78,10 @@ void MQTTManager::on_message(const struct mosquitto_message* message) {
 #endif
 
     {
-        std::unique_lock<std::mutex> lock(g_mqtt_queue_mutex);
-        mqtt_receive_packets->push(packet);
-
-        g_cv.notify_one();
+        std::unique_lock<std::mutex> lock(*g_mqtt_queue_mutex);
+        raw_packet_queue->push(packet);
     }
+    g_cv->notify_one();
 //    Todo: Remove comment
 //    GatewayManager::master_board().serial_port().write(packet);
 //    using namespace std::chrono_literals;

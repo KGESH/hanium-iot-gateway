@@ -22,9 +22,9 @@ public:
 
     MQTTManager() = delete;
 
-    MQTTManager(const char* id, const char* host, int port, const std::queue<std::vector<uint8_t>>& mqtt_packet_queue,
-                std::mutex& g_mqtt_queue_mutex,
-                std::condition_variable& g_cv);
+    MQTTManager(const char* id, const char* host, int port, RAW_PACKET_Q* mqtt_packet_queue,
+                std::mutex* g_mqtt_queue_mutex,
+                std::condition_variable* g_cv);
 
     MQTTManager(const MQTTManager&) = delete;
 
@@ -37,6 +37,11 @@ public:
     bool IsConnected();
 
     void PublishTopic(const std::string& topic, const std::string& payload);
+
+//    std::shared_ptr<RAW_PACKET_Q> raw_packet_queue;
+    RAW_PACKET_Q* raw_packet_queue;
+    std::mutex* g_mqtt_queue_mutex;
+    std::condition_variable* g_cv;
 
 private:
 
@@ -56,9 +61,6 @@ private:
     std::pair<std::vector<uint8_t>, EParseJsonErrorCode>
     ParseMqttMessage(const std::string& topic, const std::string& payload);
 
-    std::unique_ptr<std::queue<std::vector<uint8_t>>> mqtt_receive_packets;
-    std::mutex& g_mqtt_queue_mutex;
-    std::condition_variable& g_cv;
 };
 
 #endif //PLANT_GATEWAY_MQTT_MANAGER_H
