@@ -21,6 +21,16 @@ public:
         auto packet_string = ss.str();
         return packet_string;
     }
+
+    static std::string PacketToString(const RAW_PACKET& packet) {
+        std::stringstream ss;
+        for (const auto& data: packet) {
+            ss << static_cast<char>(data);
+        }
+
+        auto packet_string = ss.str();
+        return packet_string;
+    }
 };
 
 #endif //HANIUM_IOT_GATEWAY_UTIL_H

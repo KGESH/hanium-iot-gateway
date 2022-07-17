@@ -236,7 +236,12 @@ void GatewayManager::Polling(MQTTManager& mqtt_manager) const {
     }
 
     RequestPacket polling_packet(RequestHeader{0x23, 0x27, 0xff, 0xa0, 0});
-    master_board_.serial_port().write(polling_packet.Packet());
+    {
+        std::lock_guard<std::mutex> lock(*this->g_mqtt_queue_mutex);
+//        master_board_.serial_port().write(polling_packet.Packet());
+        this->raw_packet_queue->push(polling_packet.Packet());
+    }
+    g_cv->notify_one();
     master_board_.IncreasePollingCount();
 }
 
@@ -464,7 +469,7 @@ void GatewayManager::WritePacket() const {
             auto packet = raw_packet_queue->front();
             raw_packet_queue->pop();
             master_board_.serial_port().write(packet);
-            std::cout << "Packet Write Done\n";
+            std::cout << "Packet Write Done: " << Util::PacketToString(packet) << std::endl;
             std::this_thread::sleep_for(500ms);
 
 

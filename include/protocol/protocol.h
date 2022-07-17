@@ -10,7 +10,8 @@
 #include <vector>
 #include <queue>
 
-typedef std::queue<std::vector<uint8_t>> RAW_PACKET_Q;
+typedef std::vector<uint8_t> RAW_PACKET;
+typedef std::queue<RAW_PACKET> RAW_PACKET_Q;
 
 enum EMasterProtocol {
     kStart = 0x23,
