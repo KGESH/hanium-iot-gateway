@@ -1,6 +1,10 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
+#include <mutex>
+#include <queue>
+#include <condition_variable>
+#include "protocol/protocol.h"
 #include "mqtt/mqtt_manager.h"
 #include "gateway/gateway_manager.h"
 #include "mqtt/mqtt_config.h"
@@ -10,7 +14,7 @@
 [[noreturn]] void run() {
     std::mutex mutex;
     std::condition_variable cv;
-    RAW_PACKET_Q mqtt_receive_packets;
+    Packet::RAW_PACKET_Q mqtt_receive_packets;
 
     /** Todo: Refactor Mutex */
     auto gateway_manager = GatewayManager(SERIAL_PORT, BAUDRATE, &mqtt_receive_packets, &mutex, &cv);

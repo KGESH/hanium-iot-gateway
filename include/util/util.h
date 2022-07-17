@@ -22,10 +22,10 @@ public:
         return packet_string;
     }
 
-    static std::string PacketToString(const RAW_PACKET& packet) {
+    static std::string PacketToString(const Packet::RAW_PACKET& packet) {
         std::stringstream ss;
-        for (const auto& data: packet) {
-            ss << static_cast<char>(data);
+        for (const auto& p: packet) {
+            ss << static_cast<int>(p) << " ";
         }
 
         auto packet_string = ss.str();

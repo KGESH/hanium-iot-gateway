@@ -13,7 +13,7 @@
 
 
 GatewayManager::GatewayManager(const std::string& serial_port_name, int baudrate,
-                               RAW_PACKET_Q* mqtt_packet_queue,
+                               Packet::RAW_PACKET_Q* mqtt_packet_queue,
                                std::mutex* g_mqtt_queue_mutex,
                                std::condition_variable* g_cv)
         : master_board_(serial_port_name, baudrate),
@@ -469,14 +469,9 @@ void GatewayManager::WritePacket() const {
             auto packet = raw_packet_queue->front();
             raw_packet_queue->pop();
             master_board_.serial_port().write(packet);
-            std::cout << "Packet Write Done: " << Util::PacketToString(packet) << std::endl;
+            std::cout << "Write Done: " << Util::PacketToString(packet) << std::endl;
             std::this_thread::sleep_for(500ms);
-
-
         }
-//            std::this_thread::sleep_for(500ms);
-
-//        std::this_thread::sleep_for(100ms);
     }
 }
 

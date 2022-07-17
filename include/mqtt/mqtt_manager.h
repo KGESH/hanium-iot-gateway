@@ -22,7 +22,7 @@ public:
 
     MQTTManager() = delete;
 
-    MQTTManager(const char* id, const char* host, int port, RAW_PACKET_Q* mqtt_packet_queue,
+    MQTTManager(const char* id, const char* host, int port, Packet::RAW_PACKET_Q* mqtt_packet_queue,
                 std::mutex* g_mqtt_queue_mutex,
                 std::condition_variable* g_cv);
 
@@ -38,8 +38,7 @@ public:
 
     void PublishTopic(const std::string& topic, const std::string& payload);
 
-//    std::shared_ptr<RAW_PACKET_Q> raw_packet_queue;
-    RAW_PACKET_Q* raw_packet_queue;
+    Packet::RAW_PACKET_Q* raw_packet_queue;
     std::mutex* g_mqtt_queue_mutex;
     std::condition_variable* g_cv;
 

@@ -25,7 +25,7 @@ public:
     const GatewayManager& operator=(const GatewayManager&) = delete;
 
     GatewayManager(const std::string& serial_port_name, int baudrate,
-                   RAW_PACKET_Q* mqtt_packet_queue, std::mutex* g_mqtt_queue_mutex,
+                   Packet::RAW_PACKET_Q* mqtt_packet_queue, std::mutex* g_mqtt_queue_mutex,
                    std::condition_variable* g_cv);
 
     bool ListeningMaster(MQTTManager& mqtt_manager) const;
@@ -39,7 +39,7 @@ public:
     /** Todo: Run Worker Thread */
     void WritePacket() const;
 //    std::shared_ptr<RAW_PACKET_Q> raw_packet_queue;
-    RAW_PACKET_Q* raw_packet_queue;
+    Packet::RAW_PACKET_Q* raw_packet_queue;
     std::mutex* g_mqtt_queue_mutex;
     std::condition_variable* g_cv;
 

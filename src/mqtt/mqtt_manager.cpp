@@ -14,8 +14,7 @@
 #include "packet/request_packet.h"
 
 MQTTManager::MQTTManager(const char* id, const char* host, int port,
-//                         const std::queue<std::vector<uint8_t>>& mqtt_packet_queue,
-                         RAW_PACKET_Q* mqtt_packet_queue,
+                         Packet::RAW_PACKET_Q* mqtt_packet_queue,
                          std::mutex* g_mqtt_queue_mutex,
                          std::condition_variable* g_cv
 
