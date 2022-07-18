@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD 20)
 include_directories(include)
 include_directories(lib/serial/include)
 include_directories(lib/rapidjson/include)
+include_directories(lib/sqlite)
 
 
 # If Debug Build
@@ -20,6 +21,7 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 set(APP_SOURCES
         src/mqtt/mqtt_manager.cpp src/master/master_board.cpp src/gateway/gateway_manager.cpp
         src/packet/request_packet.cpp src/packet/response_packet.cpp
+        src/logger/logger.cpp
         src/main.cpp)
 
 # Set Serial Library
@@ -35,8 +37,10 @@ set(SERIAL_HEADERS lib/serial/include/serial/serial.h)
 add_library(serial ${SERIAL_SOURCES})
 target_link_libraries(serial ${CMAKE_THREAD_LIBS_INIT})
 
+set(SQLITE_SOURCES lib/sqlite/sqlite3.c)
+
 # Make Executable Binary
-add_executable(${PROJECT_NAME} ${APP_SOURCES} ${SERIAL_SOURCES})
+add_executable(${PROJECT_NAME} ${APP_SOURCES} ${SERIAL_SOURCES} ${SQLITE_SOURCES})
 
 # Link Mosquitto Library
 find_package(PkgConfig REQUIRED)

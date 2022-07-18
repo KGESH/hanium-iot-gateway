@@ -2,15 +2,19 @@
 #include <chrono>
 #include <thread>
 #include <queue>
-#include <condition_variable>
 #include "protocol/protocol.h"
 #include "mqtt/mqtt_manager.h"
 #include "gateway/gateway_manager.h"
 #include "mqtt/mqtt_config.h"
 #include "master/master_config.h"
+#include "logger/logger.h"
 
 
 [[noreturn]] void run() {
+    Logger logger;
+    logger.Init();
+
+
     std::mutex mutex;
     std::condition_variable cv;
     Packet::RAW_PACKET_Q mqtt_receive_packets;
