@@ -237,8 +237,7 @@ void GatewayManager::Polling(MQTTManager& mqtt_manager) const {
 
     RequestPacket polling_packet(RequestHeader{0x23, 0x27, 0xff, 0xa0, 0});
     {
-        std::lock_guard<std::mutex> lock(*this->g_mqtt_queue_mutex);
-//        master_board_.serial_port().write(polling_packet.Packet());
+        std::unique_lock<std::mutex> lock(*this->g_mqtt_queue_mutex);
         this->raw_packet_queue->push(polling_packet.Packet());
     }
     g_cv->notify_one();
@@ -307,7 +306,10 @@ void GatewayManager::RequestTemperature() const {
     const RequestHeader header{0x23, 0x22, kSlaveId, 0xc1, 0x02};
     const PacketBody body{0x07, 0xd0};
     RequestPacket temperature_packet(header, body);
-    master_board_.serial_port().write(temperature_packet.Packet());
+    {
+        std::unique_lock<std::mutex> lock(*this->g_mqtt_queue_mutex);
+        this->raw_packet_queue->push(temperature_packet.Packet());
+    }
 }
 
 void GatewayManager::ParseEmergency(ResponsePacket& packet, MQTTManager& mqtt_manager, uint16_t memory_address) const {

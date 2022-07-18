@@ -1,7 +1,6 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
-#include <mutex>
 #include <queue>
 #include <condition_variable>
 #include "protocol/protocol.h"
@@ -34,13 +33,11 @@
             if (now - polling_interval > 7000) {
                 polling_interval = now;
                 gateway_manager.Polling(mqtt_manager);
-                std::this_thread::sleep_for(500ms);
             }
 
             if (now - temperature_interval > 15000) {
                 temperature_interval = now;
                 gateway_manager.RequestTemperature();
-                std::this_thread::sleep_for(500ms);
             }
 
             if (gateway_manager.ListeningMaster(mqtt_manager)) {
@@ -53,7 +50,7 @@
             mqtt_manager.Reconnect();
         }
 
-        std::this_thread::sleep_for(1000ms);
+        std::this_thread::sleep_for(500ms);
     }
 }
 
