@@ -8,13 +8,9 @@
 #include "mqtt/mqtt_config.h"
 #include "master/master_config.h"
 #include "logger/logger.h"
-
+#include "database/database_config.h"
 
 [[noreturn]] void run() {
-    Logger logger;
-    logger.Init();
-
-
     std::mutex mutex;
     std::condition_variable cv;
     Packet::RAW_PACKET_Q mqtt_receive_packets;
@@ -44,11 +40,7 @@
                 gateway_manager.RequestTemperature();
             }
 
-            if (gateway_manager.ListeningMaster(mqtt_manager)) {
-#ifdef DEBUG
-                std::cout << "Receive Success!" << std::endl;
-#endif
-            }
+            gateway_manager.ListeningMaster(mqtt_manager);
 
         } else {
             mqtt_manager.Reconnect();
@@ -60,6 +52,7 @@
 
 int main() {
     try {
+        Logger::Init(MEMORY_DATABASE);
         run();
 
     } catch (std::exception& e) {

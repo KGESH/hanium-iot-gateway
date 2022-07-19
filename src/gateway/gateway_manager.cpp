@@ -10,6 +10,7 @@
 #include "mqtt/mqtt_topic.h"
 #include "packet/response_packet.h"
 #include "util/util.h"
+#include "logger/logger.h"
 
 
 GatewayManager::GatewayManager(const std::string& serial_port_name, int baudrate,
@@ -32,29 +33,11 @@ bool GatewayManager::ListeningMaster(MQTTManager& mqtt_manager) const {
     auto[packet, receive_fail] = ReceivePacket();
 
     if (receive_fail || !packet.ValidChecksum()) {
-#ifdef DEBUG
-//        switch (receive_fail) {
-//            case EReceiveErrorCode::kFailReceiveHeader:
-//                std::cout << "Wait for receive header.. " << std::endl;
-//                break;
-//
-//            case EReceiveErrorCode::kFailReceiveBodyData:
-//                std::cout << "Receive packet Error: Fail to receive body! " << std::endl;
-//                break;
-//
-//            case EReceiveErrorCode::kFailReceiveTail:
-//                std::cout << "Receive packet Error: Fail to receive tail! " << std::endl;
-//                break;
-//
-//            case EReceiveErrorCode::kFailOverMaxSlaveCount:
-//                std::cout << "Receive packet Error: Max Slave Count Over then 127" << std::endl;
-//                break;
-//
-//            default:
-//                std::cout << "Receive Fail Assert!" << std::endl;
-//                break;
-//        }
-#endif
+        if (receive_fail != EReceiveErrorCode::kFailReceiveHeader) {
+            PacketLog log("MASTER_TO_GATEWAY", "RECEIVE_FAIL", "CODE: " + std::to_string(receive_fail));
+            Logger::CreateLog(log);
+        }
+
         return false;
     }
 
@@ -62,6 +45,7 @@ bool GatewayManager::ListeningMaster(MQTTManager& mqtt_manager) const {
     if (packet.header().error_code != kOK) {
         std::cout << "Publish Error topic" << std::endl;
         PublishError(mqtt_manager, kErrorTopic, Util::PacketToString(packet));
+        PacketLog log("MASTER_TO_GATEWAY", "HEADER_CODE", Util::PacketToString(packet));
     }
 #endif
 
@@ -457,9 +441,7 @@ GatewayManager::ParseMemoryWrite(ResponsePacket& packet, MQTTManager& mqtt_manag
 #endif
             PublishError(mqtt_manager, kAssertTopic + "/MemoryWriteDefault", Util::PacketToString(packet));
             return;
-
     }
-
 }
 
 void GatewayManager::WritePacket() const {
@@ -471,7 +453,13 @@ void GatewayManager::WritePacket() const {
             auto packet = raw_packet_queue->front();
             raw_packet_queue->pop();
             master_board_.serial_port().write(packet);
+#ifdef DEBUG
             std::cout << "Write Done: " << Util::PacketToString(packet) << std::endl;
+#endif
+            {
+                PacketLog log("GATEWAY_TO_MASTER", "SERIAL_WRITE", Util::PacketToString(packet));
+                Logger::CreateLog(log);
+            }
             std::this_thread::sleep_for(500ms);
         }
     }

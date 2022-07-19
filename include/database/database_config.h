@@ -6,7 +6,7 @@
 #define HANIUM_IOT_GATEWAY_DATABASE_CONFIG_H
 
 constexpr auto DATABASE_FILE_NAME = "packet_log.db";
-constexpr auto DEBUG_DATABASE_FILE_NAME = ":memory:";
+constexpr auto MEMORY_DATABASE = ":memory:";
 
 
 #endif //HANIUM_IOT_GATEWAY_DATABASE_CONFIG_H
