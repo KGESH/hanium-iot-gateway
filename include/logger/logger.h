@@ -13,7 +13,7 @@ class Logger {
 public:
     Logger() = delete;
 
-    static void Init();
+    static void Init(const std::string& database_name);
 
     static void CreateLog(const PacketLog& log);
 

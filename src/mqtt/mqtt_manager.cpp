@@ -12,17 +12,17 @@
 #include "mqtt/mqtt_config.h"
 #include "rapidjson/document.h"
 #include "packet/request_packet.h"
+#include "logger/logger.h"
+#include "util/util.h"
 
 MQTTManager::MQTTManager(const char* id, const char* host, int port,
                          Packet::RAW_PACKET_Q* mqtt_packet_queue,
                          std::mutex* g_mqtt_queue_mutex,
-                         std::condition_variable* g_cv
-
-)
+                         std::condition_variable* g_cv)
         : mosquittopp(id),
-//          raw_packet_queue(std::make_shared<RAW_PACKET_Q>(mqtt_packet_queue)),
           raw_packet_queue(mqtt_packet_queue),
           g_mqtt_queue_mutex(g_mqtt_queue_mutex), g_cv(g_cv) {
+
     std::cout << "Call Constructor" << std::endl;
     mosqpp::lib_init();
     int keepalive = DEFAULT_KEEP_ALIVE;
@@ -81,10 +81,11 @@ void MQTTManager::on_message(const struct mosquitto_message* message) {
         raw_packet_queue->push(packet);
     }
     g_cv->notify_one();
-//    Todo: Remove comment
-//    GatewayManager::master_board().serial_port().write(packet);
-//    using namespace std::chrono_literals;
-//    std::this_thread::sleep_for(500ms);
+    {
+        PacketLog log("MQTT_TO_GATEWAY", "RECEIVE_MSG", Util::PacketToString(packet));
+        Logger::CreateLog(log);
+        Logger::ReadLog();
+    }
 }
 
 void MQTTManager::Reconnect() {
@@ -130,6 +131,8 @@ void MQTTManager::PublishTopic(const std::string& topic, const std::string& payl
 #ifdef DEBUG
     std::cout << "Publish Topic: " << topic << std::endl;
 #endif
+    PacketLog log("GATEWAY_TO_MQTT", topic, payload);
+    Logger::CreateLog(log);
     publish(nullptr, topic.c_str(), payload.length(), payload.data());
 }
 

@@ -4,11 +4,11 @@
 #include "logger/packet_log.h"
 
 
-PacketLog::PacketLog(char packet_type, std::string event_name, std::string packet)
-        : packet_type_(packet_type), event_name_(std::move(event_name)), packet_(std::move(packet)) {}
+PacketLog::PacketLog(std::string direction, std::string event_name, std::string packet)
+        : direction_(std::move(direction)), event_name_(std::move(event_name)), packet_(std::move(packet)) {}
 
-const char* PacketLog::packet_type() const {
-    return &packet_type_;
+const std::string& PacketLog::direction() const {
+    return direction_;
 }
 
 const std::string& PacketLog::packet() const {

@@ -12,9 +12,9 @@ class PacketLog {
 public:
     PacketLog() = default;
 
-    PacketLog(char packet_type, std::string event_name, std::string packet);
+    PacketLog(std::string direction, std::string event_name, std::string packet);
 
-    const char* packet_type() const;
+    const std::string& direction() const;
 
     const std::string& packet() const;
 
@@ -22,7 +22,7 @@ public:
 
 private:
     int id_;
-    char packet_type_;
+    std::string direction_;
     std::string packet_;
     std::string event_name_;
     std::string created_at_;
