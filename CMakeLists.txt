@@ -22,6 +22,8 @@ set(APP_SOURCES
         src/mqtt/mqtt_manager.cpp src/master/master_board.cpp src/gateway/gateway_manager.cpp
         src/packet/request_packet.cpp src/packet/response_packet.cpp
         src/logger/logger.cpp
+        src/logger/packet_log.cpp
+        src/database/database.cpp
         src/main.cpp)
 
 # Set Serial Library

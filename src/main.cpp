@@ -8,12 +8,14 @@
 #include "mqtt/mqtt_config.h"
 #include "master/master_config.h"
 #include "logger/logger.h"
-
+#include "database/database.h"
 
 [[noreturn]] void run() {
-    Logger logger;
-    logger.Init();
+    Logger::Init();
+    PacketLog log{'S', "packet_event_name_default", "0 9 8 7 6 5 4 3 2 12"};
+    Logger::CreateLog(log);
 
+    Logger::ReadLog();
 
     std::mutex mutex;
     std::condition_variable cv;
