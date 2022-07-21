@@ -14,12 +14,12 @@
 
 
 GatewayManager::GatewayManager(const std::string& serial_port_name, int baudrate,
-                               Packet::RAW_PACKET_Q* mqtt_packet_queue,
-                               std::mutex* g_mqtt_queue_mutex,
-                               std::condition_variable* g_cv)
+                               Packet::RAW_PACKET_Q* packet_queue,
+                               std::mutex* packet_queue_mutex,
+                               std::condition_variable* packet_queue_cv)
         : master_board_(serial_port_name, baudrate),
-          raw_packet_queue(mqtt_packet_queue),
-          g_mqtt_queue_mutex(g_mqtt_queue_mutex), g_cv(g_cv) {}
+          packet_queue_(packet_queue),
+          packet_queue_mutex_(packet_queue_mutex), packet_queue_cv_(packet_queue_cv) {}
 
 
 /**
@@ -221,10 +221,10 @@ void GatewayManager::Polling(MQTTManager& mqtt_manager) const {
 
     RequestPacket polling_packet(RequestHeader{0x23, 0x27, 0xff, 0xa0, 0});
     {
-        std::unique_lock<std::mutex> lock(*this->g_mqtt_queue_mutex);
-        this->raw_packet_queue->push(polling_packet.Packet());
+        std::unique_lock<std::mutex> lock(*this->packet_queue_mutex_);
+        this->packet_queue_->push(polling_packet.Packet());
     }
-    g_cv->notify_one();
+    packet_queue_cv_->notify_one();
     master_board_.IncreasePollingCount();
 }
 
@@ -291,8 +291,8 @@ void GatewayManager::RequestTemperature() const {
     const PacketBody body{0x07, 0xd0};
     RequestPacket temperature_packet(header, body);
     {
-        std::unique_lock<std::mutex> lock(*this->g_mqtt_queue_mutex);
-        this->raw_packet_queue->push(temperature_packet.Packet());
+        std::unique_lock<std::mutex> lock(*this->packet_queue_mutex_);
+        this->packet_queue_->push(temperature_packet.Packet());
     }
 }
 
@@ -448,10 +448,10 @@ void GatewayManager::WritePacket() const {
     using namespace std::chrono_literals;
     while (true) {
         {
-            std::unique_lock<std::mutex> lock(*g_mqtt_queue_mutex);
-            g_cv->wait(lock, [&]() { return !raw_packet_queue->empty(); });
-            auto packet = raw_packet_queue->front();
-            raw_packet_queue->pop();
+            std::unique_lock<std::mutex> lock(*packet_queue_mutex_);
+            packet_queue_cv_->wait(lock, [&]() { return !packet_queue_->empty(); });
+            auto packet = packet_queue_->front();
+            packet_queue_->pop();
             master_board_.serial_port().write(packet);
 #ifdef DEBUG
             std::cout << "Write Done: " << Util::PacketToString(packet) << std::endl;

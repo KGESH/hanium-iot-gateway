@@ -9,7 +9,6 @@
 #include <vector>
 #include "mqtt/mqtt_manager.h"
 #include "mqtt/mqtt_topic.h"
-#include "mqtt/mqtt_config.h"
 #include "rapidjson/document.h"
 #include "packet/request_packet.h"
 #include "logger/logger.h"
@@ -20,8 +19,8 @@ MQTTManager::MQTTManager(const char* id, const char* host, int port,
                          std::mutex* g_mqtt_queue_mutex,
                          std::condition_variable* g_cv)
         : mosquittopp(id),
-          raw_packet_queue(mqtt_packet_queue),
-          g_mqtt_queue_mutex(g_mqtt_queue_mutex), g_cv(g_cv) {
+          packet_queue_(mqtt_packet_queue),
+          packet_queue_mutex_(g_mqtt_queue_mutex), packet_queue_cv_(g_cv) {
 
     std::cout << "Call Constructor" << std::endl;
     mosqpp::lib_init();
@@ -77,10 +76,10 @@ void MQTTManager::on_message(const struct mosquitto_message* message) {
 #endif
 
     {
-        std::unique_lock<std::mutex> lock(*g_mqtt_queue_mutex);
-        raw_packet_queue->push(packet);
+        std::unique_lock<std::mutex> lock(*packet_queue_mutex_);
+        packet_queue_->push(packet);
     }
-    g_cv->notify_one();
+    packet_queue_cv_->notify_one();
     {
         PacketLog log("MQTT_TO_GATEWAY", "RECEIVE_MSG", Util::PacketToString(packet));
         Logger::CreateLog(log);

@@ -25,8 +25,8 @@ public:
     const GatewayManager& operator=(const GatewayManager&) = delete;
 
     GatewayManager(const std::string& serial_port_name, int baudrate,
-                   Packet::RAW_PACKET_Q* mqtt_packet_queue, std::mutex* g_mqtt_queue_mutex,
-                   std::condition_variable* g_cv);
+                   Packet::RAW_PACKET_Q* packet_queue, std::mutex* packet_queue_mutex,
+                   std::condition_variable* packet_queue_cv);
 
     bool ListeningMaster(MQTTManager& mqtt_manager) const;
 
@@ -38,10 +38,7 @@ public:
 
     /** Todo: Run Worker Thread */
     void WritePacket() const;
-//    std::shared_ptr<RAW_PACKET_Q> raw_packet_queue;
-    Packet::RAW_PACKET_Q* raw_packet_queue;
-    std::mutex* g_mqtt_queue_mutex;
-    std::condition_variable* g_cv;
+
 
 private:
 
@@ -72,8 +69,10 @@ private:
 
     std::string GetSlaveStateTopic(uint8_t slave_id, const std::string& sensor_name) const;
 
+    Packet::RAW_PACKET_Q* packet_queue_;
+    std::mutex* packet_queue_mutex_;
+    std::condition_variable* packet_queue_cv_;
     MasterBoard master_board_;
-
 
 };
 
