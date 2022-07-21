@@ -30,9 +30,13 @@ public:
 
     bool ListeningMaster(MQTTManager& mqtt_manager) const;
 
+    bool GetMasterId() const;
+
     void ParseCommand(ResponsePacket& packet, MQTTManager& mqtt_manager) const;
 
     void Polling(MQTTManager& mqtt_manager) const;
+
+    void RequestMasterId() const;
 
     void RequestTemperature() const;
 

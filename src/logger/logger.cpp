@@ -4,6 +4,7 @@
 #include "logger/logger.h"
 #include "database/database.h"
 #include <iostream>
+#include <cstring>
 
 void Logger::Init(const std::string& database_name) {
     Database::StartDatabaseEngine(database_name);
@@ -44,7 +45,7 @@ void Logger::CreateLog(const PacketLog& log) {
 
     rc = sqlite3_step(res);
     if (rc != SQLITE_DONE) {
-        std::cout << "Create Log SQL error!" << std::endl;
+        std::cout << "Create Log SQL error!!" << std::endl;
         std::cout << sqlite3_errmsg(Database::db) << std::endl;
         sqlite3_close(Database::db);
         throw std::exception();

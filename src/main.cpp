@@ -7,16 +7,26 @@
 #include "gateway/gateway_manager.h"
 #include "mqtt/mqtt_config.h"
 #include "master/master_config.h"
-#include "logger/logger.h"
 #include "database/database_config.h"
+#include "logger/logger.h"
 
 [[noreturn]] void run() {
     std::mutex mutex;
     std::condition_variable cv;
     Packet::RAW_PACKET_Q mqtt_receive_packets;
 
+    using namespace std::chrono_literals;
     /** Todo: Refactor Mutex */
     auto gateway_manager = GatewayManager(SERIAL_PORT, BAUDRATE, &mqtt_receive_packets, &mutex, &cv);
+
+    /** Todo: Extract */
+    gateway_manager.RequestMasterId();
+    std::this_thread::sleep_for(1000ms);
+    while (!gateway_manager.GetMasterId()) {
+        std::cout << "Check Master ID ..." << std::endl;
+        std::this_thread::sleep_for(2000ms);
+    }
+
     auto mqtt_manager = MQTTManager(CLIENT_ID, HOST, MQTT_PORT, &mqtt_receive_packets, &mutex, &cv);
     unsigned long polling_interval = 0;
     unsigned long temperature_interval = 0;

@@ -81,7 +81,7 @@ void MQTTManager::on_message(const struct mosquitto_message* message) {
     }
     packet_queue_cv_->notify_one();
     {
-        PacketLog log("MQTT_TO_GATEWAY", "RECEIVE_MSG", Util::PacketToString(packet));
+        PacketLog log("MQTT_TO_GATEWAY", "RECEIVE_MSG", Util::RawPacketToString(packet));
         Logger::CreateLog(log);
         Logger::ReadLog();
     }
