@@ -38,9 +38,6 @@ public:
 
     void PublishTopic(const std::string& topic, const std::string& payload);
 
-    Packet::RAW_PACKET_Q* raw_packet_queue;
-    std::mutex* g_mqtt_queue_mutex;
-    std::condition_variable* g_cv;
 
 private:
 
@@ -60,6 +57,9 @@ private:
     std::pair<std::vector<uint8_t>, EParseJsonErrorCode>
     ParseMqttMessage(const std::string& topic, const std::string& payload);
 
+    Packet::RAW_PACKET_Q* packet_queue_;
+    std::mutex* packet_queue_mutex_;
+    std::condition_variable* packet_queue_cv_;
 };
 
 #endif //PLANT_GATEWAY_MQTT_MANAGER_H
