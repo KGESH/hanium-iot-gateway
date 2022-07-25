@@ -25,10 +25,28 @@ int MasterBoard::polling_count() {
     return polling_count_;
 }
 
-//void MasterBoard::GetMasterId() const {
-//    RequestHeader header{0x23, 0x27, 0xff, 0xc1, 2};
-//    PacketBody body{0x1f, 0xa5};
-//    RequestPacket master_id_request_packet(header, body);
-//
-//    serial_port_->write(master_id_request_packet.Packet());
-//}
+int MasterBoard::master_id() const {
+    return master_id_;
+}
+
+void MasterBoard::SetMasterId(int master_id) {
+    master_id_ = master_id;
+}
+
+const std::array<uint8_t, kMaxSlaveCount>& MasterBoard::slave_ids() const {
+    return slave_ids_;
+}
+
+void MasterBoard::SetSlaveIds(const std::array<uint8_t, kMaxSlaveCount>& slaveIds) {
+    /** Todo: Check Shallow Copy */
+    slave_ids_ = slaveIds;
+}
+
+void MasterBoard::SetSlaveCount(const uint8_t slave_count) {
+    slave_count_ = slave_count;
+}
+
+uint8_t MasterBoard::slave_count() const {
+    return slave_count_;
+}
+

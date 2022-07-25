@@ -11,33 +11,34 @@
 #include "logger/logger.h"
 
 [[noreturn]] void run() {
+    using namespace std::chrono_literals;
+    using namespace std::chrono;
+
     std::mutex mutex;
     std::condition_variable cv;
     Packet::RAW_PACKET_Q mqtt_receive_packets;
 
-    using namespace std::chrono_literals;
     /** Todo: Refactor Mutex */
     auto gateway_manager = GatewayManager(SERIAL_PORT, BAUDRATE, &mqtt_receive_packets, &mutex, &cv);
-
-    /** Todo: Extract */
-    gateway_manager.RequestMasterId();
-    std::this_thread::sleep_for(1000ms);
-    while (!gateway_manager.GetMasterId()) {
-        std::cout << "Check Master ID ..." << std::endl;
+    while (!gateway_manager.SetupMasterId()) {
+        std::cout << "Retry get master id ..." << std::endl;
         std::this_thread::sleep_for(2000ms);
     }
 
-    auto mqtt_manager = MQTTManager(CLIENT_ID, HOST, MQTT_PORT, &mqtt_receive_packets, &mutex, &cv);
-    unsigned long polling_interval = 0;
-    unsigned long temperature_interval = 0;
+    while (!gateway_manager.SetupSlaveIds()) {
+        std::cout << "Retry get slave ids ..." << std::endl;
+        std::this_thread::sleep_for(2000ms);
+    }
+
+    const auto master_id = gateway_manager.master_board().master_id();
+    auto mqtt_manager = MQTTManager(CLIENT_ID, HOST, MQTT_PORT, master_id, &mqtt_receive_packets, &mutex, &cv);
     std::thread mqtt_packet_writer(&GatewayManager::WritePacket, &gateway_manager);
     mqtt_packet_writer.detach();
 
-
+    unsigned long polling_interval = 0;
+    unsigned long temperature_interval = 0;
     while (true) {
-        using namespace std::chrono_literals;
         if (mqtt_manager.IsConnected()) {
-            using namespace std::chrono;
             auto now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
             if (now - polling_interval > 7000) {

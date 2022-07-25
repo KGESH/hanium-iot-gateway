@@ -22,9 +22,8 @@ public:
 
     MQTTManager() = delete;
 
-    MQTTManager(const char* id, const char* host, int port, Packet::RAW_PACKET_Q* mqtt_packet_queue,
-                std::mutex* g_mqtt_queue_mutex,
-                std::condition_variable* g_cv);
+    MQTTManager(const char* id, const char* host, int port, int master_id, Packet::RAW_PACKET_Q* mqtt_packet_queue,
+                std::mutex* g_mqtt_queue_mutex, std::condition_variable* g_cv);
 
     MQTTManager(const MQTTManager&) = delete;
 
@@ -60,6 +59,8 @@ private:
     Packet::RAW_PACKET_Q* packet_queue_;
     std::mutex* packet_queue_mutex_;
     std::condition_variable* packet_queue_cv_;
+
+    int master_id_;
 };
 
 #endif //PLANT_GATEWAY_MQTT_MANAGER_H
