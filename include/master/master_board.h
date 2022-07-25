@@ -43,8 +43,6 @@ public:
     uint8_t slave_count() const;
 
 private:
-
-
     std::unique_ptr<serial::Serial> serial_port_;
     static int polling_count_;
     int master_id_;

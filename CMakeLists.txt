@@ -21,7 +21,8 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 # If Create New cpp file
 # Then Import Here
 set(APP_SOURCES
-        src/mqtt/mqtt_manager.cpp src/master/master_board.cpp src/gateway/gateway_manager.cpp
+        src/mqtt/mqtt_manager.cpp src/mqtt/mqtt_topic.cpp
+        src/master/master_board.cpp src/gateway/gateway_manager.cpp
         src/packet/request_packet.cpp src/packet/response_packet.cpp
         src/database/database.cpp
         src/logger/packet_log.cpp

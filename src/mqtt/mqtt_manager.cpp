@@ -12,11 +12,11 @@
 #include "logger/logger.h"
 #include "util/util.h"
 
-MQTTManager::MQTTManager(const char* id, const char* host, int port,
+MQTTManager::MQTTManager(const char* id, const char* host, int port, int master_id,
                          Packet::RAW_PACKET_Q* mqtt_packet_queue,
-                         std::mutex* g_mqtt_queue_mutex,
-                         std::condition_variable* g_cv)
+                         std::mutex* g_mqtt_queue_mutex, std::condition_variable* g_cv)
         : mosquittopp(id),
+          master_id_(master_id),
           packet_queue_(mqtt_packet_queue),
           packet_queue_mutex_(g_mqtt_queue_mutex), packet_queue_cv_(g_cv) {
 
@@ -100,13 +100,12 @@ bool MQTTManager::IsConnected() {
 
 void MQTTManager::SubscribeTopics() {
     /*  Input Sensor  */
-    subscribe(nullptr, kTemperatureTopic.c_str());
-
+    subscribe(nullptr, MqttTopic::TemperatureTopic(master_id_).c_str());
 
     /*  Output Sensor */
-    subscribe(nullptr, kWaterPumpTopic.c_str());
-    subscribe(nullptr, kLedTopic.c_str());
-    subscribe(nullptr, kFanTopic.c_str());
+    subscribe(nullptr, MqttTopic::WaterPumpTopic(master_id_).c_str());
+    subscribe(nullptr, MqttTopic::LedTopic(master_id_).c_str());
+    subscribe(nullptr, MqttTopic::FanTopic(master_id_).c_str());
 
 
     /*  IO Sensor */
@@ -114,12 +113,12 @@ void MQTTManager::SubscribeTopics() {
 
 
     /*  Master Only */
-    subscribe(nullptr, kReadMasterMemoryTopic.c_str());
-    subscribe(nullptr, kWriteMasterMemoryTopic.c_str());
+    subscribe(nullptr, MqttTopic::ReadMasterMemoryTopic(master_id_).c_str());
+    subscribe(nullptr, MqttTopic::WriteMasterMemoryTopic(master_id_).c_str());
 
 
     /*  Message Test  */
-    subscribe(nullptr, kTestRawPacket);
+    subscribe(nullptr, MqttTopic::kTestRawPacket);
     subscribe(nullptr, "test/topic");
 }
 

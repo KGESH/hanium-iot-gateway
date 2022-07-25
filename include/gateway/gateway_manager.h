@@ -38,12 +38,12 @@ public:
 
     void Polling(MQTTManager& mqtt_manager) const;
 
-
     void RequestTemperature() const;
 
     /** Todo: Run Worker Thread */
     void WritePacket() const;
 
+    const MasterBoard& master_board() const;
 
 private:
 

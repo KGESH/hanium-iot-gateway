@@ -30,7 +30,8 @@
         std::this_thread::sleep_for(2000ms);
     }
 
-    auto mqtt_manager = MQTTManager(CLIENT_ID, HOST, MQTT_PORT, &mqtt_receive_packets, &mutex, &cv);
+    const auto master_id = gateway_manager.master_board().master_id();
+    auto mqtt_manager = MQTTManager(CLIENT_ID, HOST, MQTT_PORT, master_id, &mqtt_receive_packets, &mutex, &cv);
     std::thread mqtt_packet_writer(&GatewayManager::WritePacket, &gateway_manager);
     mqtt_packet_writer.detach();
 
