@@ -4,8 +4,6 @@
 
 #include <iostream>
 #include <utility>
-#include <memory>
-#include <queue>
 #include <vector>
 #include "mqtt/mqtt_manager.h"
 #include "mqtt/mqtt_topic.h"

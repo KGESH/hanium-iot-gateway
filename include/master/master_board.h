@@ -19,6 +19,10 @@ public:
 
     MasterBoard(const std::string& port_name, int baudrate);
 
+    int master_id() const;
+
+    void SetMasterId(int master_id);
+
     serial::Serial& serial_port() const;
 
     static void ResetPollingCount();
@@ -32,6 +36,7 @@ private:
 
     std::unique_ptr<serial::Serial> serial_port_;
     static int polling_count_;
+    int master_id_;
 };
 
 #endif //PLANT_GATEWAY_MASTER_MANAGER_H

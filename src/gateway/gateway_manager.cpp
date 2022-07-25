@@ -464,7 +464,14 @@ void GatewayManager::WritePacket() const {
     }
 }
 
-bool GatewayManager::GetMasterId() const {
+bool GatewayManager::SetupMasterId() {
+    using namespace std::chrono_literals;
+
+    /** 마스터 보드 ID 저장된
+     *  메모리 읽기 요청   */
+    RequestMasterId();
+    std::this_thread::sleep_for(500ms);
+
     auto[packet, receive_fail] = ReceivePacket();
 
     if (receive_fail || !packet.ValidChecksum()) {
@@ -477,18 +484,9 @@ bool GatewayManager::GetMasterId() const {
 
 
     /** Todo: Extract Method */
-    const auto high_data = packet.body().data[0];
-    const auto low_data = packet.body().data[1];
+    const auto masterId = ParseMasterId(packet);
 
-    const auto ten = (high_data) << 8;   //  (num * 0x10) Equal (num << 4)
-    const auto one = (low_data);
-    const auto address = ten + one;
-
-    std::cout << "Receive Packet: " << Util::RawPacketToString(packet.Packet()) << std::endl;
-    std::cout << "Master ID: " << address << std::endl;
-    /** Todo: Set Master ID */
-
-
+    master_board_.SetMasterId(masterId);
 
 #ifdef DEBUG
     if (packet.header().error_code != kOK) {
@@ -497,8 +495,21 @@ bool GatewayManager::GetMasterId() const {
     }
 #endif
 
-//    ParseCommand(packet, mqtt_manager);
     return true;
+}
+
+int GatewayManager::ParseMasterId(ResponsePacket& packet) const {
+    const auto high_data = packet.body().data[0];
+    const auto low_data = packet.body().data[1];
+
+    const auto ten = high_data << 8;   //  (num * 0x10) Equal (num << 4)
+    const auto one = low_data;
+    const auto address = ten + one;
+
+    std::cout << "Receive Packet: " << Util::RawPacketToString(packet.Packet()) << std::endl;
+    std::cout << "Master ID: " << address << std::endl;
+
+    return address;
 }
 
 void GatewayManager::RequestMasterId() const {
@@ -507,4 +518,3 @@ void GatewayManager::RequestMasterId() const {
     RequestPacket master_id_request_packet(header, body);
     master_board_.serial_port().write(master_id_request_packet.Packet());
 }
-

@@ -30,7 +30,7 @@ public:
 
     bool ListeningMaster(MQTTManager& mqtt_manager) const;
 
-    bool GetMasterId() const;
+    bool SetupMasterId();
 
     void ParseCommand(ResponsePacket& packet, MQTTManager& mqtt_manager) const;
 
@@ -72,6 +72,8 @@ private:
     void PublishFanTopic(ResponsePacket& packet, MQTTManager& mqtt_manager) const;
 
     std::string GetSlaveStateTopic(uint8_t slave_id, const std::string& sensor_name) const;
+
+    int ParseMasterId(ResponsePacket& packet) const;
 
     Packet::RAW_PACKET_Q* packet_queue_;
     std::mutex* packet_queue_mutex_;
