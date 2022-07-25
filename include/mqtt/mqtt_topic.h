@@ -21,6 +21,10 @@ const auto kWaterPumpTopic = kMasterTopic + kMasterId + "/water";
 const auto kLedTopic = kMasterTopic + kMasterId + "/led";
 const auto kFanTopic = kMasterTopic + kMasterId + "/fan";
 
+std::string TemperatureTopic(int master_id) {
+    return "master/" + std::to_string(master_id) + "/temperature";
+}
+
 
 
 const auto kErrorTopic = kMasterTopic + kMasterId + "/error";

@@ -38,12 +38,17 @@ public:
     static int polling_count();
 
 
+    void SetSlaveCount(const uint8_t slave_count);
+
+    uint8_t slave_count() const;
+
 private:
 
 
     std::unique_ptr<serial::Serial> serial_port_;
     static int polling_count_;
     int master_id_;
+    int slave_count_;
     std::array<uint8_t, kMaxSlaveCount> slave_ids_;
 };
 

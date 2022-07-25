@@ -20,7 +20,6 @@
 
     /** Todo: Refactor Mutex */
     auto gateway_manager = GatewayManager(SERIAL_PORT, BAUDRATE, &mqtt_receive_packets, &mutex, &cv);
-
     while (!gateway_manager.SetupMasterId()) {
         std::cout << "Retry get master id ..." << std::endl;
         std::this_thread::sleep_for(2000ms);
@@ -32,12 +31,11 @@
     }
 
     auto mqtt_manager = MQTTManager(CLIENT_ID, HOST, MQTT_PORT, &mqtt_receive_packets, &mutex, &cv);
-    unsigned long polling_interval = 0;
-    unsigned long temperature_interval = 0;
     std::thread mqtt_packet_writer(&GatewayManager::WritePacket, &gateway_manager);
     mqtt_packet_writer.detach();
 
-
+    unsigned long polling_interval = 0;
+    unsigned long temperature_interval = 0;
     while (true) {
         if (mqtt_manager.IsConnected()) {
             auto now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();

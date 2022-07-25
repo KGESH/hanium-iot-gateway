@@ -470,10 +470,9 @@ bool GatewayManager::SetupMasterId() {
     /** 마스터 보드 ID 저장된
      *  메모리 읽기 요청   */
     RequestMasterId();
-    std::this_thread::sleep_for(500ms);
+    std::this_thread::sleep_for(1000ms);
 
     auto[packet, receive_fail] = ReceivePacket();
-
     if (receive_fail || !packet.ValidChecksum()) {
         if (receive_fail != EReceiveErrorCode::kFailReceiveHeader) {
             PacketLog log("MASTER_TO_GATEWAY", "RECEIVE_FAIL", "CODE: " + std::to_string(receive_fail));
@@ -481,7 +480,6 @@ bool GatewayManager::SetupMasterId() {
         }
         return false;
     }
-
 
     /** Todo: Extract Method */
     const auto masterId = ParseMasterId(packet);
@@ -519,19 +517,15 @@ bool GatewayManager::SetupSlaveIds() {
     if (!count_receive_success) {
         return false;
     }
+    master_board_.SetSlaveCount(slave_count);
     std::this_thread::sleep_for(500ms);
 
     const auto[slave_ids, ids_receive_success] = GetSlaveIds(slave_count);
     if (!ids_receive_success) {
         return false;
     }
-
     master_board_.SetSlaveIds(slave_ids);
-    std::cout << "Debug Slave ID:" << std::endl;
-    for (const auto& id: master_board_.slave_ids()) {
-        std::cout << id << ", ";
-    }
-    std::cout << std::endl;
+
     return true;
 }
 
