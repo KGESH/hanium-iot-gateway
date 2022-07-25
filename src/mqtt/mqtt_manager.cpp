@@ -51,7 +51,6 @@ void MQTTManager::on_subscribe(int mid, int qos_count, const int* granted_qos) {
 #ifdef DEBUG
     std::cout << "Subscription succeeded." << std::endl;
 #endif
-
 }
 
 

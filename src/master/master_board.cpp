@@ -34,6 +34,15 @@ void MasterBoard::SetMasterId(int master_id) {
     master_id_ = master_id;
 }
 
+const std::array<uint8_t, kMaxSlaveCount>& MasterBoard::slave_ids() const {
+    return slave_ids_;
+}
+
+void MasterBoard::SetSlaveIds(const std::array<uint8_t, kMaxSlaveCount>& slaveIds) {
+    /** Todo: Check Shallow Copy */
+    slave_ids_ = slaveIds;
+}
+
 //void MasterBoard::SetupMasterId() const {
 //    RequestHeader header{0x23, 0x27, 0xff, 0xc1, 2};
 //    PacketBody body{0x1f, 0xa5};

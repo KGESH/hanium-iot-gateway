@@ -488,13 +488,6 @@ bool GatewayManager::SetupMasterId() {
 
     master_board_.SetMasterId(masterId);
 
-#ifdef DEBUG
-    if (packet.header().error_code != kOK) {
-        std::cout << "Error code: " << packet.header().error_code << std::endl;
-        PacketLog log("MASTER_TO_GATEWAY", "HEADER_CODE", Util::RawPacketToString(packet.Packet()));
-    }
-#endif
-
     return true;
 }
 
@@ -518,3 +511,83 @@ void GatewayManager::RequestMasterId() const {
     RequestPacket master_id_request_packet(header, body);
     master_board_.serial_port().write(master_id_request_packet.Packet());
 }
+
+bool GatewayManager::SetupSlaveIds() {
+    using namespace std::chrono_literals;
+
+    const auto[slave_count, count_receive_success] = GetSlaveCount();
+    if (!count_receive_success) {
+        return false;
+    }
+    std::this_thread::sleep_for(500ms);
+
+    const auto[slave_ids, ids_receive_success] = GetSlaveIds(slave_count);
+    if (!ids_receive_success) {
+        return false;
+    }
+
+    master_board_.SetSlaveIds(slave_ids);
+    std::cout << "Debug Slave ID:" << std::endl;
+    for (const auto& id: master_board_.slave_ids()) {
+        std::cout << id << ", ";
+    }
+    std::cout << std::endl;
+    return true;
+}
+
+
+/** 마스터 보드 ID 저장된
+ *  메모리 읽기 요청   */
+void GatewayManager::RequestSlaveIds(uint8_t slave_count) const {
+    RequestHeader header{0x23, 0x27, 0xff, 0xc1, slave_count};
+    PacketBody body{0x20, 0x6d}; // Slave IDs Read Only Memory
+    RequestPacket master_id_request_packet(header, body);
+    master_board_.serial_port().write(master_id_request_packet.Packet());
+}
+
+/** Master에 연결된 slave 수 읽기 */
+void GatewayManager::RequestSlaveCount() const {
+    RequestHeader header{0x23, 0x21, 0xff, 0xc1, 1};
+    PacketBody body{0x20, 0x6c}; // Slave Connect Count Read Only Memory
+    RequestPacket master_id_request_packet(header, body);
+    master_board_.serial_port().write(master_id_request_packet.Packet());
+}
+
+std::pair<uint8_t, bool> GatewayManager::GetSlaveCount() const {
+    using namespace std::chrono_literals;
+
+    RequestSlaveCount();
+    std::this_thread::sleep_for(500ms);
+    auto[packet, receive_fail] = ReceivePacket();
+    if (receive_fail || !packet.ValidChecksum()) {
+        if (receive_fail != EReceiveErrorCode::kFailReceiveHeader) {
+            PacketLog log("MASTER_TO_GATEWAY", "RECEIVE_FAIL", "CODE: " + std::to_string(receive_fail));
+            Logger::CreateLog(log);
+        }
+        return {{}, false};
+    }
+
+    const auto slave_count = packet.body().data[0];
+    return {slave_count, true};
+}
+
+std::pair<std::array<uint8_t, kMaxSlaveCount>, bool> GatewayManager::GetSlaveIds(uint8_t slave_count) const {
+    using namespace std::chrono_literals;
+
+    RequestSlaveIds(slave_count);
+    std::this_thread::sleep_for(500ms);
+    auto[packet, receive_fail] = ReceivePacket();
+    if (receive_fail || !packet.ValidChecksum()) {
+        if (receive_fail != EReceiveErrorCode::kFailReceiveHeader) {
+            PacketLog log("MASTER_TO_GATEWAY", "RECEIVE_FAIL", "CODE: " + std::to_string(receive_fail));
+            Logger::CreateLog(log);
+        }
+        return {{}, false};
+    }
+
+    std::array<uint8_t, kMaxSlaveCount> slave_ids{};
+    std::copy(packet.body().data.begin(), packet.body().data.end(), slave_ids.begin());
+
+    return {slave_ids, true};
+}
+

@@ -6,8 +6,10 @@
 #define PLANT_GATEWAY_MASTER_MANAGER_H
 
 #include "serial/serial.h"
+#include <array>
 #include <memory>
 
+constexpr auto kMaxSlaveCount = 127;
 
 class MasterBoard {
 public:
@@ -23,6 +25,10 @@ public:
 
     void SetMasterId(int master_id);
 
+    const std::array<uint8_t, kMaxSlaveCount>& slave_ids() const;
+
+    void SetSlaveIds(const std::array<uint8_t, kMaxSlaveCount>& slaveIds);
+
     serial::Serial& serial_port() const;
 
     static void ResetPollingCount();
@@ -34,9 +40,11 @@ public:
 
 private:
 
+
     std::unique_ptr<serial::Serial> serial_port_;
     static int polling_count_;
     int master_id_;
+    std::array<uint8_t, kMaxSlaveCount> slave_ids_;
 };
 
 #endif //PLANT_GATEWAY_MASTER_MANAGER_H

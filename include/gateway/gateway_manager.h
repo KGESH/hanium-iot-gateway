@@ -32,11 +32,12 @@ public:
 
     bool SetupMasterId();
 
+    bool SetupSlaveIds();
+
     void ParseCommand(ResponsePacket& packet, MQTTManager& mqtt_manager) const;
 
     void Polling(MQTTManager& mqtt_manager) const;
 
-    void RequestMasterId() const;
 
     void RequestTemperature() const;
 
@@ -74,6 +75,16 @@ private:
     std::string GetSlaveStateTopic(uint8_t slave_id, const std::string& sensor_name) const;
 
     int ParseMasterId(ResponsePacket& packet) const;
+
+    void RequestSlaveCount() const;
+
+    void RequestSlaveIds(uint8_t slave_count) const;
+
+    void RequestMasterId() const;
+
+    std::pair<uint8_t, bool> GetSlaveCount() const;
+
+    std::pair<std::array<uint8_t, kMaxSlaveCount>, bool> GetSlaveIds(uint8_t slave_count) const;
 
     Packet::RAW_PACKET_Q* packet_queue_;
     std::mutex* packet_queue_mutex_;

@@ -26,6 +26,11 @@
         std::this_thread::sleep_for(2000ms);
     }
 
+    while (!gateway_manager.SetupSlaveIds()) {
+        std::cout << "Retry get slave ids ..." << std::endl;
+        std::this_thread::sleep_for(2000ms);
+    }
+
     auto mqtt_manager = MQTTManager(CLIENT_ID, HOST, MQTT_PORT, &mqtt_receive_packets, &mutex, &cv);
     unsigned long polling_interval = 0;
     unsigned long temperature_interval = 0;
