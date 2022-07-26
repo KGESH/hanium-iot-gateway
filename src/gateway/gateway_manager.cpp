@@ -13,10 +13,10 @@
 #include "logger/logger.h"
 
 
-GatewayManager::GatewayManager(const std::string& serial_port_name, int baudrate,
-                               Packet::RAW_PACKET_Q* packet_queue,
-                               std::mutex* packet_queue_mutex,
-                               std::condition_variable* packet_queue_cv)
+GatewayManager::GatewayManager(const std::string &serial_port_name, int baudrate,
+                               Packet::RAW_PACKET_Q *packet_queue,
+                               std::mutex *packet_queue_mutex,
+                               std::condition_variable *packet_queue_cv)
         : master_board_(serial_port_name, baudrate),
           packet_queue_(packet_queue),
           packet_queue_mutex_(packet_queue_mutex), packet_queue_cv_(packet_queue_cv) {}
@@ -25,11 +25,12 @@ GatewayManager::GatewayManager(const std::string& serial_port_name, int baudrate
 /**
  * @return master/{MasterId}/slave/{SlaveId}/{SensorName}/state
  * */
-std::string GatewayManager::GetSlaveStateTopic(const uint8_t slave_id, const std::string& sensor_name) const {
-    return MqttTopic::kMasterTopic + std::to_string(master_board_.master_id()) + "/slave/" + std::to_string(slave_id) + "/" + sensor_name + "/state";
+std::string GatewayManager::GetSlaveStateTopic(const uint8_t slave_id, const std::string &sensor_name) const {
+    return MqttTopic::kMasterTopic + std::to_string(master_board_.master_id()) + "/slave/" + std::to_string(slave_id) +
+           "/" + sensor_name + "/state";
 }
 
-bool GatewayManager::ListeningMaster(MQTTManager& mqtt_manager) const {
+bool GatewayManager::ListeningMaster(MQTTManager &mqtt_manager) const {
     auto[packet, receive_fail] = ReceivePacket();
 
     if (receive_fail || !packet.ValidChecksum()) {
@@ -53,7 +54,7 @@ bool GatewayManager::ListeningMaster(MQTTManager& mqtt_manager) const {
     return true;
 }
 
-void GatewayManager::ParseCommand(ResponsePacket& packet, MQTTManager& mqtt_manager) const {
+void GatewayManager::ParseCommand(ResponsePacket &packet, MQTTManager &mqtt_manager) const {
     uint16_t target_memory_address = 0;
 
     if (packet.header().data_length > 0) {
@@ -95,7 +96,7 @@ void GatewayManager::ParseCommand(ResponsePacket& packet, MQTTManager& mqtt_mana
     }
 }
 
-void GatewayManager::ParseMemoryRead(ResponsePacket& packet, MQTTManager& mqtt_manager, uint16_t memory_address) const {
+void GatewayManager::ParseMemoryRead(ResponsePacket &packet, MQTTManager &mqtt_manager, uint16_t memory_address) const {
     switch (memory_address) {
         case kTemperatureStart ... kTemperatureEnd:
             PublishTemperature(packet, mqtt_manager);
@@ -146,7 +147,7 @@ void GatewayManager::ParseMemoryRead(ResponsePacket& packet, MQTTManager& mqtt_m
     }
 }
 
-void GatewayManager::PublishLedTopic(ResponsePacket& packet, MQTTManager& mqtt_manager) const {
+void GatewayManager::PublishLedTopic(ResponsePacket &packet, MQTTManager &mqtt_manager) const {
     const auto led_topic = std::move(GetSlaveStateTopic(packet.header().target_id, "led"));
     std::cout << "Publish Led Topic" << led_topic << std::endl;
 
@@ -154,32 +155,32 @@ void GatewayManager::PublishLedTopic(ResponsePacket& packet, MQTTManager& mqtt_m
     mqtt_manager.PublishTopic(led_topic, Util::PacketToString(packet));
 }
 
-void GatewayManager::PublishMotorTopic(ResponsePacket& packet, MQTTManager& mqtt_manager) const {
+void GatewayManager::PublishMotorTopic(ResponsePacket &packet, MQTTManager &mqtt_manager) const {
     auto motor_topic = std::move(GetSlaveStateTopic(packet.header().target_id, "water"));
     /* TODO: Change message */
     mqtt_manager.PublishTopic(motor_topic, Util::PacketToString(packet));
 }
 
-void GatewayManager::PublishFanTopic(ResponsePacket& packet, MQTTManager& mqtt_manager) const {
+void GatewayManager::PublishFanTopic(ResponsePacket &packet, MQTTManager &mqtt_manager) const {
     auto fan_topic = std::move(GetSlaveStateTopic(packet.header().target_id, "fan"));
     /* TODO: Change message */
     mqtt_manager.PublishTopic(fan_topic, Util::PacketToString(packet));
 }
 
 
-void GatewayManager::PublishTestPacket(ResponsePacket& packet, MQTTManager& mqtt_manager) const {
+void GatewayManager::PublishTestPacket(ResponsePacket &packet, MQTTManager &mqtt_manager) const {
     auto message(Util::PacketToString(packet));
 
     mqtt_manager.PublishTopic(MqttTopic::kTestResponsePacket, message);
 }
 
 
-void GatewayManager::PublishPollingSuccess(MQTTManager& mqtt_manager) const {
+void GatewayManager::PublishPollingSuccess(MQTTManager &mqtt_manager) const {
     mqtt_manager.PublishTopic(MqttTopic::kPollingTopic, std::to_string(kOK));
     master_board_.ResetPollingCount();
 }
 
-void GatewayManager::PublishTemperature(ResponsePacket& packet, MQTTManager& mqtt_manager) const {
+void GatewayManager::PublishTemperature(ResponsePacket &packet, MQTTManager &mqtt_manager) const {
     /*  온도 값 예시
      *  high low
      *  0x02 0x35 = 23.5도
@@ -209,7 +210,7 @@ void GatewayManager::PublishTemperature(ResponsePacket& packet, MQTTManager& mqt
     mqtt_manager.PublishTopic(topic, std::to_string(temperature));
 }
 
-void GatewayManager::Polling(MQTTManager& mqtt_manager) const {
+void GatewayManager::Polling(MQTTManager &mqtt_manager) const {
     static constexpr auto kMaxPollingCount = 10;
     if (master_board_.polling_count() > kMaxPollingCount) {
         /*  TODO: Publish master error message after change protocol  */
@@ -242,7 +243,7 @@ std::pair<ResponsePacket, EReceiveErrorCode> GatewayManager::ReceivePacket() con
          * 기본 값이 0x23이기 때문
          * */
         if (static_cast<uint8_t>(master_board_.serial_port().read().c_str()[0]) == kStart &&
-            master_board_.serial_port().read(reinterpret_cast<uint8_t*>(&header) + 1, sizeof(ResponseHeader) - 1)) {
+            master_board_.serial_port().read(reinterpret_cast<uint8_t *>(&header) + 1, sizeof(ResponseHeader) - 1)) {
 
             if (header.data_length > kMaxSlaveCount) {
                 /* Need Memory Crash Handling  */
@@ -278,7 +279,7 @@ std::pair<ResponsePacket, EReceiveErrorCode> GatewayManager::ReceivePacket() con
 }
 
 void
-GatewayManager::PublishError(MQTTManager& mqtt_manager, const std::string& topic, const std::string& message) const {
+GatewayManager::PublishError(MQTTManager &mqtt_manager, const std::string &topic, const std::string &message) const {
     mqtt_manager.PublishTopic(topic, message);
 }
 
@@ -296,7 +297,7 @@ void GatewayManager::RequestTemperature() const {
     }
 }
 
-void GatewayManager::ParseEmergency(ResponsePacket& packet, MQTTManager& mqtt_manager, uint16_t memory_address) const {
+void GatewayManager::ParseEmergency(ResponsePacket &packet, MQTTManager &mqtt_manager, uint16_t memory_address) const {
     switch (memory_address) {
         case kTemperatureStart ... kTemperatureEnd:
             /** Todo: Mock Emergency */
@@ -339,8 +340,8 @@ void GatewayManager::ParseEmergency(ResponsePacket& packet, MQTTManager& mqtt_ma
     }
 }
 
-void GatewayManager::PublishSensorStateTopic(ResponsePacket& packet, MQTTManager& mqtt_manager,
-                                             std::string&& sensor_name) const {
+void GatewayManager::PublishSensorStateTopic(ResponsePacket &packet, MQTTManager &mqtt_manager,
+                                             std::string &&sensor_name) const {
     /**
      * Todo: Check Exception
      *       패킷 실행시간 > 0 : 실행중
@@ -370,11 +371,12 @@ void GatewayManager::PublishSensorStateTopic(ResponsePacket& packet, MQTTManager
 }
 
 void
-GatewayManager::ParseMemoryWrite(ResponsePacket& packet, MQTTManager& mqtt_manager, uint16_t memory_address) const {
+GatewayManager::ParseMemoryWrite(ResponsePacket &packet, MQTTManager &mqtt_manager, uint16_t memory_address) const {
     switch (memory_address) {
         case kTemperatureStart ... kTemperatureEnd:
             /** Todo: Assert */
-            PublishError(mqtt_manager, MqttTopic::kAssertTopic + "/MemoryWriteTemperature", Util::PacketToString(packet));
+            PublishError(mqtt_manager, MqttTopic::kAssertTopic + "/MemoryWriteTemperature",
+                         Util::PacketToString(packet));
             return;
 
         case kHumidityStart ... kHumidityEnd:
@@ -465,13 +467,9 @@ void GatewayManager::WritePacket() const {
 }
 
 bool GatewayManager::SetupMasterId() {
-    using namespace std::chrono_literals;
-
     /** 마스터 보드 ID 저장된
      *  메모리 읽기 요청   */
     RequestMasterId();
-    std::this_thread::sleep_for(1000ms);
-
     auto[packet, receive_fail] = ReceivePacket();
     if (receive_fail || !packet.ValidChecksum()) {
         if (receive_fail != EReceiveErrorCode::kFailReceiveHeader) {
@@ -483,13 +481,12 @@ bool GatewayManager::SetupMasterId() {
 
     /** Todo: Extract Method */
     const auto masterId = ParseMasterId(packet);
-
     master_board_.SetMasterId(masterId);
 
     return true;
 }
 
-int GatewayManager::ParseMasterId(ResponsePacket& packet) const {
+int GatewayManager::ParseMasterId(ResponsePacket &packet) const {
     const auto high_data = packet.body().data[0];
     const auto low_data = packet.body().data[1];
 
@@ -504,10 +501,13 @@ int GatewayManager::ParseMasterId(ResponsePacket& packet) const {
 }
 
 void GatewayManager::RequestMasterId() const {
+    using namespace std::chrono_literals;
+
     RequestHeader header{0x23, 0x27, 0xff, 0xc1, 2};
     PacketBody body{0x1f, 0xa5}; // Master ID Read Only Memory
     RequestPacket master_id_request_packet(header, body);
     master_board_.serial_port().write(master_id_request_packet.Packet());
+    std::this_thread::sleep_for(500ms);
 }
 
 bool GatewayManager::SetupSlaveIds() {
@@ -518,13 +518,21 @@ bool GatewayManager::SetupSlaveIds() {
         return false;
     }
     master_board_.SetSlaveCount(slave_count);
-    std::this_thread::sleep_for(500ms);
+    std::cout << "slave Count: " << static_cast<int>(master_board().slave_count()) << std::endl;
+
+    //sleep
 
     const auto[slave_ids, ids_receive_success] = GetSlaveIds(slave_count);
     if (!ids_receive_success) {
         return false;
     }
     master_board_.SetSlaveIds(slave_ids);
+
+    std::cout << "First ID: " << static_cast<int>(master_board().slave_ids()[0]) << std::endl;
+
+    for (int i = 0; i < master_board().slave_count(); i++) {
+        std::cout << "Get Slave Id: " << static_cast<int>(master_board().slave_ids()[i]) << std::endl;
+    }
 
     return true;
 }
@@ -533,25 +541,28 @@ bool GatewayManager::SetupSlaveIds() {
 /** 마스터 보드 ID 저장된
  *  메모리 읽기 요청   */
 void GatewayManager::RequestSlaveIds(uint8_t slave_count) const {
+    using namespace std::chrono_literals;
+
     RequestHeader header{0x23, 0x27, 0xff, 0xc1, slave_count};
     PacketBody body{0x20, 0x6d}; // Slave IDs Read Only Memory
     RequestPacket master_id_request_packet(header, body);
     master_board_.serial_port().write(master_id_request_packet.Packet());
+    std::this_thread::sleep_for(500ms);
 }
 
 /** Master에 연결된 slave 수 읽기 */
 void GatewayManager::RequestSlaveCount() const {
+    using namespace std::chrono_literals;
+
     RequestHeader header{0x23, 0x21, 0xff, 0xc1, 1};
     PacketBody body{0x20, 0x6c}; // Slave Connect Count Read Only Memory
     RequestPacket master_id_request_packet(header, body);
     master_board_.serial_port().write(master_id_request_packet.Packet());
+    std::this_thread::sleep_for(500ms);
 }
 
 std::pair<uint8_t, bool> GatewayManager::GetSlaveCount() const {
-    using namespace std::chrono_literals;
-
     RequestSlaveCount();
-    std::this_thread::sleep_for(500ms);
     auto[packet, receive_fail] = ReceivePacket();
     if (receive_fail || !packet.ValidChecksum()) {
         if (receive_fail != EReceiveErrorCode::kFailReceiveHeader) {
@@ -566,10 +577,7 @@ std::pair<uint8_t, bool> GatewayManager::GetSlaveCount() const {
 }
 
 std::pair<std::array<uint8_t, kMaxSlaveCount>, bool> GatewayManager::GetSlaveIds(uint8_t slave_count) const {
-    using namespace std::chrono_literals;
-
     RequestSlaveIds(slave_count);
-    std::this_thread::sleep_for(500ms);
     auto[packet, receive_fail] = ReceivePacket();
     if (receive_fail || !packet.ValidChecksum()) {
         if (receive_fail != EReceiveErrorCode::kFailReceiveHeader) {
@@ -582,10 +590,11 @@ std::pair<std::array<uint8_t, kMaxSlaveCount>, bool> GatewayManager::GetSlaveIds
     std::array<uint8_t, kMaxSlaveCount> slave_ids{};
     std::copy(packet.body().data.begin(), packet.body().data.end(), slave_ids.begin());
 
+    std::cout << "Recv Slave ID Packet: " << Util::RawPacketToString(packet.Packet()) << std::endl;
     return {slave_ids, true};
 }
 
-const MasterBoard& GatewayManager::master_board() const {
+const MasterBoard &GatewayManager::master_board() const {
     return master_board_;
 }
 
