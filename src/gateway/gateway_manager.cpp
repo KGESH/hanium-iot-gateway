@@ -25,8 +25,12 @@ GatewayManager::GatewayManager(const std::string& serial_port_name, int baudrate
 /**
  * @return master/{MasterId}/slave/{SlaveId}/{SensorName}/state
  * */
-std::string GatewayManager::GetSlaveStateTopic(const uint8_t slave_id, const std::string& sensor_name) const {
-    return MqttTopic::kMasterTopic + std::to_string(master_board_.master_id()) + "/slave/" + std::to_string(slave_id) +
+
+std::string
+
+GatewayManager::GetSlaveStateTopic(const uint8_t slave_id, const std::string& sensor_name) const {
+    return MqttTopic::kMasterTopic + std::to_string(master_board_.master_id()) + "/slave/" +
+           std::to_string(slave_id) +
            "/" + sensor_name + "/state";
 }
 
@@ -91,12 +95,14 @@ void GatewayManager::ParseCommand(ResponsePacket& packet, MQTTManager& mqtt_mana
 #ifdef DEBUG
             std::cout << "Parse Command Exception" << std::endl;
 #endif
-            PublishError(mqtt_manager, MqttTopic::kAssertTopic + "/ParseDefault", Util::PacketToString(packet));
+            PublishError(mqtt_manager, MqttTopic::kAssertTopic + "/ParseDefault",
+                         Util::PacketToString(packet));
             return;
     }
 }
 
-void GatewayManager::ParseMemoryRead(ResponsePacket& packet, MQTTManager& mqtt_manager, uint16_t memory_address) const {
+void GatewayManager::ParseMemoryRead(ResponsePacket& packet, MQTTManager& mqtt_manager,
+                                     uint16_t memory_address) const {
     switch (memory_address) {
         case kTemperatureStart ... kTemperatureEnd:
             PublishTemperature(packet, mqtt_manager);
@@ -104,14 +110,16 @@ void GatewayManager::ParseMemoryRead(ResponsePacket& packet, MQTTManager& mqtt_m
 
         case kHumidityStart ... kHumidityEnd:
             /** Todo: Assert */
-            PublishError(mqtt_manager, MqttTopic::kAssertTopic + "/MemReadHumidity", Util::PacketToString(packet));
+            PublishError(mqtt_manager, MqttTopic::kAssertTopic + "/MemReadHumidity",
+                         Util::PacketToString(packet));
             PublishTestPacket(packet, mqtt_manager);
             return;
 
         case kMotorStart ... kMotorEnd:
 #ifdef DEBUG
             /** Todo: Assert */
-            PublishError(mqtt_manager, MqttTopic::kAssertTopic + "/MemReadMotor", Util::PacketToString(packet));
+            PublishError(mqtt_manager, MqttTopic::kAssertTopic + "/MemReadMotor",
+                         Util::PacketToString(packet));
 
 #endif
             PublishMotorTopic(packet, mqtt_manager);
@@ -120,7 +128,8 @@ void GatewayManager::ParseMemoryRead(ResponsePacket& packet, MQTTManager& mqtt_m
         case kLedStart ... kLedEnd:
 #ifdef DEBUG
             /** Todo: Assert */
-            PublishError(mqtt_manager, MqttTopic::kAssertTopic + "/MemReadLed", Util::PacketToString(packet));
+            PublishError(mqtt_manager, MqttTopic::kAssertTopic + "/MemReadLed",
+                         Util::PacketToString(packet));
 
 #endif
             PublishLedTopic(packet, mqtt_manager);
@@ -129,7 +138,8 @@ void GatewayManager::ParseMemoryRead(ResponsePacket& packet, MQTTManager& mqtt_m
         case kFanStart ... kFanEnd:
 #ifdef DEBUG
             /** Todo: Assert */
-            PublishError(mqtt_manager, MqttTopic::kAssertTopic + "/MemReadFan", Util::PacketToString(packet));
+            PublishError(mqtt_manager, MqttTopic::kAssertTopic + "/MemReadFan",
+                         Util::PacketToString(packet));
 #endif
             PublishFanTopic(packet, mqtt_manager);
             return;
@@ -139,7 +149,8 @@ void GatewayManager::ParseMemoryRead(ResponsePacket& packet, MQTTManager& mqtt_m
         default:
 #ifdef DEBUG
             /** Todo: Assert */
-            PublishError(mqtt_manager, MqttTopic::kAssertTopic + "/MemReadDefault", Util::PacketToString(packet));
+            PublishError(mqtt_manager, MqttTopic::kAssertTopic + "/MemReadDefault",
+                         Util::PacketToString(packet));
 
 #endif
             return;
@@ -206,7 +217,8 @@ void GatewayManager::PublishTemperature(ResponsePacket& packet, MQTTManager& mqt
     }
 
     const auto slave_id(std::to_string(packet.header().target_id));
-    std::string topic = "master/" + std::to_string(master_board_.master_id()) + "/slave/" + slave_id + "/temperature";
+    std::string topic =
+            "master/" + std::to_string(master_board_.master_id()) + "/slave/" + slave_id + "/temperature";
     mqtt_manager.PublishTopic(topic, std::to_string(temperature));
 }
 
@@ -243,7 +255,8 @@ std::pair<ResponsePacket, EReceiveErrorCode> GatewayManager::ReceivePacket() con
          * 기본 값이 0x23이기 때문
          * */
         if (static_cast<uint8_t>(master_board_.serial_port().read().c_str()[0]) == kStart &&
-            master_board_.serial_port().read(reinterpret_cast<uint8_t*>(&header) + 1, sizeof(ResponseHeader) - 1)) {
+            master_board_.serial_port().read(reinterpret_cast<uint8_t*>(&header) + 1,
+                                             sizeof(ResponseHeader) - 1)) {
 
             if (header.data_length > kMaxSlaveCount) {
                 /* Need Memory Crash Handling  */
@@ -264,7 +277,8 @@ std::pair<ResponsePacket, EReceiveErrorCode> GatewayManager::ReceivePacket() con
             std::string buffer;
             auto receive_tail_length = master_board_.serial_port().readline(buffer, sizeof(PacketTail),
                                                                             std::to_string(kEnd));
-            PacketTail tail{static_cast<uint8_t>(buffer.c_str()[0]), static_cast<uint8_t>(buffer.c_str()[1])};
+            PacketTail tail{static_cast<uint8_t>(buffer.c_str()[0]),
+                            static_cast<uint8_t>(buffer.c_str()[1])};
 
             if (receive_tail_length <= 0) {
                 return {{}, kFailReceiveTail};
@@ -279,7 +293,8 @@ std::pair<ResponsePacket, EReceiveErrorCode> GatewayManager::ReceivePacket() con
 }
 
 void
-GatewayManager::PublishError(MQTTManager& mqtt_manager, const std::string& topic, const std::string& message) const {
+GatewayManager::PublishError(MQTTManager& mqtt_manager, const std::string& topic,
+                             const std::string& message) const {
     mqtt_manager.PublishTopic(topic, message);
 }
 
@@ -299,36 +314,42 @@ void GatewayManager::RequestTemperature() const {
     }
 }
 
-void GatewayManager::ParseEmergency(ResponsePacket& packet, MQTTManager& mqtt_manager, uint16_t memory_address) const {
+void GatewayManager::ParseEmergency(ResponsePacket& packet, MQTTManager& mqtt_manager,
+                                    uint16_t memory_address) const {
     switch (memory_address) {
         case kTemperatureStart ... kTemperatureEnd:
             /** Todo: Mock Emergency */
-            PublishError(mqtt_manager, MqttTopic::kAssertTopic + "/EmergencyTemperature", Util::PacketToString(packet));
+            PublishError(mqtt_manager, MqttTopic::kAssertTopic + "/EmergencyTemperature",
+                         Util::PacketToString(packet));
 
             return;
 
         case kHumidityStart ... kHumidityEnd:
             /** Todo: Mock Emergency */
-            PublishError(mqtt_manager, MqttTopic::kAssertTopic + "/EmergencyHumidity", Util::PacketToString(packet));
+            PublishError(mqtt_manager, MqttTopic::kAssertTopic + "/EmergencyHumidity",
+                         Util::PacketToString(packet));
             return;
 
         case kMotorStart ... kMotorEnd:
 #ifdef DEBUG
-            PublishError(mqtt_manager, MqttTopic::kAssertTopic + "/EmergencyMotor", Util::PacketToString(packet));
+            PublishError(mqtt_manager, MqttTopic::kAssertTopic + "/EmergencyMotor",
+                         Util::PacketToString(packet));
 #endif
             PublishSensorStateTopic(packet, mqtt_manager, "water");
             return;
 
         case kLedStart ... kLedEnd:
 #ifdef DEBUG
-            PublishError(mqtt_manager, MqttTopic::kAssertTopic + "/EmergencyLed", Util::PacketToString(packet));
+            PublishError(mqtt_manager, MqttTopic::kAssertTopic + "/EmergencyLed",
+                         Util::PacketToString(packet));
 #endif
             PublishSensorStateTopic(packet, mqtt_manager, "led");
             return;
 
         case kFanStart ... kFanEnd:
 #ifdef DEBUG
-            PublishError(mqtt_manager, MqttTopic::kAssertTopic + "/EmergencyFan", Util::PacketToString(packet));
+            PublishError(mqtt_manager, MqttTopic::kAssertTopic + "/EmergencyFan",
+                         Util::PacketToString(packet));
 #endif
             PublishSensorStateTopic(packet, mqtt_manager, "fan");
 
@@ -337,7 +358,8 @@ void GatewayManager::ParseEmergency(ResponsePacket& packet, MQTTManager& mqtt_ma
 #ifdef DEBUG
             std::cout << "Call Parse Emergency Default Assert" << std::endl;
 #endif
-            PublishError(mqtt_manager, MqttTopic::kAssertTopic + "/EmergencyDefault", Util::PacketToString(packet));
+            PublishError(mqtt_manager, MqttTopic::kAssertTopic + "/EmergencyDefault",
+                         Util::PacketToString(packet));
             return;
     }
 }
@@ -359,7 +381,8 @@ void GatewayManager::PublishSensorStateTopic(ResponsePacket& packet, MQTTManager
 #ifdef DEBUG
         std::cout << "Call PublishSensorStateTopic Assert" << std::endl;
 #endif
-        PublishError(mqtt_manager, MqttTopic::kAssertTopic + "/emergencyDataLength", Util::PacketToString(packet));
+        PublishError(mqtt_manager, MqttTopic::kAssertTopic + "/emergencyDataLength",
+                     Util::PacketToString(packet));
         return;
     }
 
@@ -373,7 +396,8 @@ void GatewayManager::PublishSensorStateTopic(ResponsePacket& packet, MQTTManager
 }
 
 void
-GatewayManager::ParseMemoryWrite(ResponsePacket& packet, MQTTManager& mqtt_manager, uint16_t memory_address) const {
+GatewayManager::ParseMemoryWrite(ResponsePacket& packet, MQTTManager& mqtt_manager,
+                                 uint16_t memory_address) const {
     switch (memory_address) {
         case kTemperatureStart ... kTemperatureEnd:
             /** Todo: Assert */
@@ -383,7 +407,8 @@ GatewayManager::ParseMemoryWrite(ResponsePacket& packet, MQTTManager& mqtt_manag
 
         case kHumidityStart ... kHumidityEnd:
             /** Todo: Assert */
-            PublishError(mqtt_manager, MqttTopic::kAssertTopic + "/MemoryWriteHumidity", Util::PacketToString(packet));
+            PublishError(mqtt_manager, MqttTopic::kAssertTopic + "/MemoryWriteHumidity",
+                         Util::PacketToString(packet));
             return;
 
         case kMotorStart ... kMotorEnd:
@@ -442,7 +467,8 @@ GatewayManager::ParseMemoryWrite(ResponsePacket& packet, MQTTManager& mqtt_manag
 #ifdef DEBUG
             std::cout << "Parse Memory Write Default Assert" << std::endl;
 #endif
-            PublishError(mqtt_manager, MqttTopic::kAssertTopic + "/MemoryWriteDefault", Util::PacketToString(packet));
+            PublishError(mqtt_manager, MqttTopic::kAssertTopic + "/MemoryWriteDefault",
+                         Util::PacketToString(packet));
             return;
     }
 }
@@ -469,13 +495,9 @@ void GatewayManager::WritePacket() const {
 }
 
 bool GatewayManager::SetupMasterId() {
-    using namespace std::chrono_literals;
-
     /** 마스터 보드 ID 저장된
      *  메모리 읽기 요청   */
     RequestMasterId();
-    std::this_thread::sleep_for(1000ms);
-
     auto[packet, receive_fail] = ReceivePacket();
     if (receive_fail || !packet.ValidChecksum()) {
         if (receive_fail != EReceiveErrorCode::kFailReceiveHeader) {
@@ -487,7 +509,6 @@ bool GatewayManager::SetupMasterId() {
 
     /** Todo: Extract Method */
     const auto masterId = ParseMasterId(packet);
-
     master_board_.SetMasterId(masterId);
 
     return true;
@@ -508,10 +529,13 @@ int GatewayManager::ParseMasterId(ResponsePacket& packet) const {
 }
 
 void GatewayManager::RequestMasterId() const {
+    using namespace std::chrono_literals;
+
     RequestHeader header{0x23, 0x27, 0xff, 0xc1, 2};
     PacketBody body{0x1f, 0xa5}; // Master ID Read Only Memory
     RequestPacket master_id_request_packet(header, body);
     master_board_.serial_port().write(master_id_request_packet.Packet());
+    std::this_thread::sleep_for(500ms);
 }
 
 bool GatewayManager::SetupSlaveIds() {
@@ -522,13 +546,21 @@ bool GatewayManager::SetupSlaveIds() {
         return false;
     }
     master_board_.SetSlaveCount(slave_count);
-    std::this_thread::sleep_for(500ms);
+    std::cout << "slave Count: " << static_cast<int>(master_board().slave_count()) << std::endl;
+
+    //sleep
 
     const auto[slave_ids, ids_receive_success] = GetSlaveIds(slave_count);
     if (!ids_receive_success) {
         return false;
     }
     master_board_.SetSlaveIds(slave_ids);
+
+    std::cout << "First ID: " << static_cast<int>(master_board().slave_ids()[0]) << std::endl;
+
+    for (int i = 0; i < master_board().slave_count(); i++) {
+        std::cout << "Get Slave Id: " << static_cast<int>(master_board().slave_ids()[i]) << std::endl;
+    }
 
     return true;
 }
@@ -537,25 +569,28 @@ bool GatewayManager::SetupSlaveIds() {
 /** 마스터 보드 ID 저장된
  *  메모리 읽기 요청   */
 void GatewayManager::RequestSlaveIds(uint8_t slave_count) const {
+    using namespace std::chrono_literals;
+
     RequestHeader header{0x23, 0x27, 0xff, 0xc1, slave_count};
     PacketBody body{0x20, 0x6d}; // Slave IDs Read Only Memory
     RequestPacket master_id_request_packet(header, body);
     master_board_.serial_port().write(master_id_request_packet.Packet());
+    std::this_thread::sleep_for(500ms);
 }
 
 /** Master에 연결된 slave 수 읽기 */
 void GatewayManager::RequestSlaveCount() const {
+    using namespace std::chrono_literals;
+
     RequestHeader header{0x23, 0x21, 0xff, 0xc1, 1};
     PacketBody body{0x20, 0x6c}; // Slave Connect Count Read Only Memory
     RequestPacket master_id_request_packet(header, body);
     master_board_.serial_port().write(master_id_request_packet.Packet());
+    std::this_thread::sleep_for(500ms);
 }
 
 std::pair<uint8_t, bool> GatewayManager::GetSlaveCount() const {
-    using namespace std::chrono_literals;
-
     RequestSlaveCount();
-    std::this_thread::sleep_for(500ms);
     auto[packet, receive_fail] = ReceivePacket();
     if (receive_fail || !packet.ValidChecksum()) {
         if (receive_fail != EReceiveErrorCode::kFailReceiveHeader) {
@@ -569,11 +604,9 @@ std::pair<uint8_t, bool> GatewayManager::GetSlaveCount() const {
     return {slave_count, true};
 }
 
-std::pair<std::array<uint8_t, kMaxSlaveCount>, bool> GatewayManager::GetSlaveIds(uint8_t slave_count) const {
-    using namespace std::chrono_literals;
-
+std::pair<std::array<uint8_t, kMaxSlaveCount>, bool>
+GatewayManager::GetSlaveIds(uint8_t slave_count) const {
     RequestSlaveIds(slave_count);
-    std::this_thread::sleep_for(500ms);
     auto[packet, receive_fail] = ReceivePacket();
     if (receive_fail || !packet.ValidChecksum()) {
         if (receive_fail != EReceiveErrorCode::kFailReceiveHeader) {
@@ -586,6 +619,7 @@ std::pair<std::array<uint8_t, kMaxSlaveCount>, bool> GatewayManager::GetSlaveIds
     std::array<uint8_t, kMaxSlaveCount> slave_ids{};
     std::copy(packet.body().data.begin(), packet.body().data.end(), slave_ids.begin());
 
+    std::cout << "Recv Slave ID Packet: " << Util::RawPacketToString(packet.Packet()) << std::endl;
     return {slave_ids, true};
 }
 
