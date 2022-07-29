@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/jee/hanium/include -I/home/jee/hanium/lib/serial/include -I/home/jee/hanium/lib/rapidjson/include -I/home/jee/hanium/lib/sqlite
+CXX_INCLUDES = -I/home/jee/hanium/include -I/home/jee/hanium/lib/mosquitto/include -I/home/jee/hanium/lib/mosquitto/lib/cpp -I/home/jee/hanium/lib/serial/include -I/home/jee/hanium/lib/rapidjson/include -I/home/jee/hanium/lib/sqlite
 
 CXX_FLAGS =  -pthread -O3 -DNDEBUG -std=gnu++2a
 

@@ -65,6 +65,18 @@ CMAKE_BINARY_DIR = /home/jee/hanium/release
 #=============================================================================
 # Targets provided globally by CMake.
 
+# Special rule for the target install/local
+install/local: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/opt/clion-2021.3.4/bin/cmake/linux/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local
+
+# Special rule for the target install/local
+install/local/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/opt/clion-2021.3.4/bin/cmake/linux/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local/fast
+
 # Special rule for the target install
 install: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
@@ -77,14 +89,15 @@ install/fast: preinstall/fast
 	/opt/clion-2021.3.4/bin/cmake/linux/bin/cmake -P cmake_install.cmake
 .PHONY : install/fast
 
-# Special rule for the target list_install_components
-list_install_components:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
-.PHONY : list_install_components
+# Special rule for the target edit_cache
+edit_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
+	/opt/clion-2021.3.4/bin/cmake/linux/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+.PHONY : edit_cache
 
-# Special rule for the target list_install_components
-list_install_components/fast: list_install_components
-.PHONY : list_install_components/fast
+# Special rule for the target edit_cache
+edit_cache/fast: edit_cache
+.PHONY : edit_cache/fast
 
 # Special rule for the target rebuild_cache
 rebuild_cache:
@@ -108,27 +121,14 @@ install/strip/fast: preinstall/fast
 	/opt/clion-2021.3.4/bin/cmake/linux/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
 .PHONY : install/strip/fast
 
-# Special rule for the target install/local
-install/local: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
-	/opt/clion-2021.3.4/bin/cmake/linux/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
-.PHONY : install/local
+# Special rule for the target list_install_components
+list_install_components:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
+.PHONY : list_install_components
 
-# Special rule for the target install/local
-install/local/fast: preinstall/fast
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
-	/opt/clion-2021.3.4/bin/cmake/linux/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
-.PHONY : install/local/fast
-
-# Special rule for the target edit_cache
-edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/opt/clion-2021.3.4/bin/cmake/linux/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
-.PHONY : edit_cache
-
-# Special rule for the target edit_cache
-edit_cache/fast: edit_cache
-.PHONY : edit_cache/fast
+# Special rule for the target list_install_components
+list_install_components/fast: list_install_components
+.PHONY : list_install_components/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -162,17 +162,69 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named serial
+# Target rules for targets named mqtt
 
 # Build rule for target.
-serial: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 serial
-.PHONY : serial
+mqtt: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 mqtt
+.PHONY : mqtt
 
 # fast build rule for target.
-serial/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/serial.dir/build.make CMakeFiles/serial.dir/build
-.PHONY : serial/fast
+mqtt/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mqtt.dir/build.make CMakeFiles/mqtt.dir/build
+.PHONY : mqtt/fast
+
+#=============================================================================
+# Target rules for targets named gateway
+
+# Build rule for target.
+gateway: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 gateway
+.PHONY : gateway
+
+# fast build rule for target.
+gateway/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/gateway.dir/build.make CMakeFiles/gateway.dir/build
+.PHONY : gateway/fast
+
+#=============================================================================
+# Target rules for targets named logger
+
+# Build rule for target.
+logger: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 logger
+.PHONY : logger
+
+# fast build rule for target.
+logger/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/logger.dir/build.make CMakeFiles/logger.dir/build
+.PHONY : logger/fast
+
+#=============================================================================
+# Target rules for targets named packet
+
+# Build rule for target.
+packet: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 packet
+.PHONY : packet
+
+# fast build rule for target.
+packet/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/packet.dir/build.make CMakeFiles/packet.dir/build
+.PHONY : packet/fast
+
+#=============================================================================
+# Target rules for targets named hanium_iot_gateway
+
+# Build rule for target.
+hanium_iot_gateway: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 hanium_iot_gateway
+.PHONY : hanium_iot_gateway
+
+# fast build rule for target.
+hanium_iot_gateway/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hanium_iot_gateway.dir/build.make CMakeFiles/hanium_iot_gateway.dir/build
+.PHONY : hanium_iot_gateway/fast
 
 #=============================================================================
 # Target rules for targets named sqlite3
@@ -188,17 +240,17 @@ sqlite3/fast:
 .PHONY : sqlite3/fast
 
 #=============================================================================
-# Target rules for targets named hanium_iot_gateway
+# Target rules for targets named serial
 
 # Build rule for target.
-hanium_iot_gateway: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 hanium_iot_gateway
-.PHONY : hanium_iot_gateway
+serial: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 serial
+.PHONY : serial
 
 # fast build rule for target.
-hanium_iot_gateway/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hanium_iot_gateway.dir/build.make CMakeFiles/hanium_iot_gateway.dir/build
-.PHONY : hanium_iot_gateway/fast
+serial/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/serial.dir/build.make CMakeFiles/serial.dir/build
+.PHONY : serial/fast
 
 lib/serial/src/impl/unix.o: lib/serial/src/impl/unix.cc.o
 .PHONY : lib/serial/src/impl/unix.o
@@ -206,7 +258,6 @@ lib/serial/src/impl/unix.o: lib/serial/src/impl/unix.cc.o
 # target to build an object file
 lib/serial/src/impl/unix.cc.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/serial.dir/build.make CMakeFiles/serial.dir/lib/serial/src/impl/unix.cc.o
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hanium_iot_gateway.dir/build.make CMakeFiles/hanium_iot_gateway.dir/lib/serial/src/impl/unix.cc.o
 .PHONY : lib/serial/src/impl/unix.cc.o
 
 lib/serial/src/impl/unix.i: lib/serial/src/impl/unix.cc.i
@@ -215,7 +266,6 @@ lib/serial/src/impl/unix.i: lib/serial/src/impl/unix.cc.i
 # target to preprocess a source file
 lib/serial/src/impl/unix.cc.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/serial.dir/build.make CMakeFiles/serial.dir/lib/serial/src/impl/unix.cc.i
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hanium_iot_gateway.dir/build.make CMakeFiles/hanium_iot_gateway.dir/lib/serial/src/impl/unix.cc.i
 .PHONY : lib/serial/src/impl/unix.cc.i
 
 lib/serial/src/impl/unix.s: lib/serial/src/impl/unix.cc.s
@@ -224,7 +274,6 @@ lib/serial/src/impl/unix.s: lib/serial/src/impl/unix.cc.s
 # target to generate assembly for a file
 lib/serial/src/impl/unix.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/serial.dir/build.make CMakeFiles/serial.dir/lib/serial/src/impl/unix.cc.s
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hanium_iot_gateway.dir/build.make CMakeFiles/hanium_iot_gateway.dir/lib/serial/src/impl/unix.cc.s
 .PHONY : lib/serial/src/impl/unix.cc.s
 
 lib/serial/src/serial.o: lib/serial/src/serial.cc.o
@@ -233,7 +282,6 @@ lib/serial/src/serial.o: lib/serial/src/serial.cc.o
 # target to build an object file
 lib/serial/src/serial.cc.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/serial.dir/build.make CMakeFiles/serial.dir/lib/serial/src/serial.cc.o
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hanium_iot_gateway.dir/build.make CMakeFiles/hanium_iot_gateway.dir/lib/serial/src/serial.cc.o
 .PHONY : lib/serial/src/serial.cc.o
 
 lib/serial/src/serial.i: lib/serial/src/serial.cc.i
@@ -242,7 +290,6 @@ lib/serial/src/serial.i: lib/serial/src/serial.cc.i
 # target to preprocess a source file
 lib/serial/src/serial.cc.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/serial.dir/build.make CMakeFiles/serial.dir/lib/serial/src/serial.cc.i
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hanium_iot_gateway.dir/build.make CMakeFiles/hanium_iot_gateway.dir/lib/serial/src/serial.cc.i
 .PHONY : lib/serial/src/serial.cc.i
 
 lib/serial/src/serial.s: lib/serial/src/serial.cc.s
@@ -251,7 +298,6 @@ lib/serial/src/serial.s: lib/serial/src/serial.cc.s
 # target to generate assembly for a file
 lib/serial/src/serial.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/serial.dir/build.make CMakeFiles/serial.dir/lib/serial/src/serial.cc.s
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hanium_iot_gateway.dir/build.make CMakeFiles/hanium_iot_gateway.dir/lib/serial/src/serial.cc.s
 .PHONY : lib/serial/src/serial.cc.s
 
 lib/sqlite/sqlite3.o: lib/sqlite/sqlite3.c.o
@@ -260,7 +306,6 @@ lib/sqlite/sqlite3.o: lib/sqlite/sqlite3.c.o
 # target to build an object file
 lib/sqlite/sqlite3.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/sqlite3.dir/build.make CMakeFiles/sqlite3.dir/lib/sqlite/sqlite3.c.o
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hanium_iot_gateway.dir/build.make CMakeFiles/hanium_iot_gateway.dir/lib/sqlite/sqlite3.c.o
 .PHONY : lib/sqlite/sqlite3.c.o
 
 lib/sqlite/sqlite3.i: lib/sqlite/sqlite3.c.i
@@ -269,7 +314,6 @@ lib/sqlite/sqlite3.i: lib/sqlite/sqlite3.c.i
 # target to preprocess a source file
 lib/sqlite/sqlite3.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/sqlite3.dir/build.make CMakeFiles/sqlite3.dir/lib/sqlite/sqlite3.c.i
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hanium_iot_gateway.dir/build.make CMakeFiles/hanium_iot_gateway.dir/lib/sqlite/sqlite3.c.i
 .PHONY : lib/sqlite/sqlite3.c.i
 
 lib/sqlite/sqlite3.s: lib/sqlite/sqlite3.c.s
@@ -278,7 +322,6 @@ lib/sqlite/sqlite3.s: lib/sqlite/sqlite3.c.s
 # target to generate assembly for a file
 lib/sqlite/sqlite3.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/sqlite3.dir/build.make CMakeFiles/sqlite3.dir/lib/sqlite/sqlite3.c.s
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hanium_iot_gateway.dir/build.make CMakeFiles/hanium_iot_gateway.dir/lib/sqlite/sqlite3.c.s
 .PHONY : lib/sqlite/sqlite3.c.s
 
 src/database/database.o: src/database/database.cpp.o
@@ -286,7 +329,7 @@ src/database/database.o: src/database/database.cpp.o
 
 # target to build an object file
 src/database/database.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hanium_iot_gateway.dir/build.make CMakeFiles/hanium_iot_gateway.dir/src/database/database.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/logger.dir/build.make CMakeFiles/logger.dir/src/database/database.cpp.o
 .PHONY : src/database/database.cpp.o
 
 src/database/database.i: src/database/database.cpp.i
@@ -294,7 +337,7 @@ src/database/database.i: src/database/database.cpp.i
 
 # target to preprocess a source file
 src/database/database.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hanium_iot_gateway.dir/build.make CMakeFiles/hanium_iot_gateway.dir/src/database/database.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/logger.dir/build.make CMakeFiles/logger.dir/src/database/database.cpp.i
 .PHONY : src/database/database.cpp.i
 
 src/database/database.s: src/database/database.cpp.s
@@ -302,7 +345,7 @@ src/database/database.s: src/database/database.cpp.s
 
 # target to generate assembly for a file
 src/database/database.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hanium_iot_gateway.dir/build.make CMakeFiles/hanium_iot_gateway.dir/src/database/database.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/logger.dir/build.make CMakeFiles/logger.dir/src/database/database.cpp.s
 .PHONY : src/database/database.cpp.s
 
 src/gateway/gateway_manager.o: src/gateway/gateway_manager.cpp.o
@@ -310,7 +353,7 @@ src/gateway/gateway_manager.o: src/gateway/gateway_manager.cpp.o
 
 # target to build an object file
 src/gateway/gateway_manager.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hanium_iot_gateway.dir/build.make CMakeFiles/hanium_iot_gateway.dir/src/gateway/gateway_manager.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/gateway.dir/build.make CMakeFiles/gateway.dir/src/gateway/gateway_manager.cpp.o
 .PHONY : src/gateway/gateway_manager.cpp.o
 
 src/gateway/gateway_manager.i: src/gateway/gateway_manager.cpp.i
@@ -318,7 +361,7 @@ src/gateway/gateway_manager.i: src/gateway/gateway_manager.cpp.i
 
 # target to preprocess a source file
 src/gateway/gateway_manager.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hanium_iot_gateway.dir/build.make CMakeFiles/hanium_iot_gateway.dir/src/gateway/gateway_manager.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/gateway.dir/build.make CMakeFiles/gateway.dir/src/gateway/gateway_manager.cpp.i
 .PHONY : src/gateway/gateway_manager.cpp.i
 
 src/gateway/gateway_manager.s: src/gateway/gateway_manager.cpp.s
@@ -326,7 +369,7 @@ src/gateway/gateway_manager.s: src/gateway/gateway_manager.cpp.s
 
 # target to generate assembly for a file
 src/gateway/gateway_manager.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hanium_iot_gateway.dir/build.make CMakeFiles/hanium_iot_gateway.dir/src/gateway/gateway_manager.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/gateway.dir/build.make CMakeFiles/gateway.dir/src/gateway/gateway_manager.cpp.s
 .PHONY : src/gateway/gateway_manager.cpp.s
 
 src/logger/logger.o: src/logger/logger.cpp.o
@@ -334,7 +377,7 @@ src/logger/logger.o: src/logger/logger.cpp.o
 
 # target to build an object file
 src/logger/logger.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hanium_iot_gateway.dir/build.make CMakeFiles/hanium_iot_gateway.dir/src/logger/logger.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/logger.dir/build.make CMakeFiles/logger.dir/src/logger/logger.cpp.o
 .PHONY : src/logger/logger.cpp.o
 
 src/logger/logger.i: src/logger/logger.cpp.i
@@ -342,7 +385,7 @@ src/logger/logger.i: src/logger/logger.cpp.i
 
 # target to preprocess a source file
 src/logger/logger.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hanium_iot_gateway.dir/build.make CMakeFiles/hanium_iot_gateway.dir/src/logger/logger.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/logger.dir/build.make CMakeFiles/logger.dir/src/logger/logger.cpp.i
 .PHONY : src/logger/logger.cpp.i
 
 src/logger/logger.s: src/logger/logger.cpp.s
@@ -350,7 +393,7 @@ src/logger/logger.s: src/logger/logger.cpp.s
 
 # target to generate assembly for a file
 src/logger/logger.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hanium_iot_gateway.dir/build.make CMakeFiles/hanium_iot_gateway.dir/src/logger/logger.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/logger.dir/build.make CMakeFiles/logger.dir/src/logger/logger.cpp.s
 .PHONY : src/logger/logger.cpp.s
 
 src/logger/packet_log.o: src/logger/packet_log.cpp.o
@@ -358,7 +401,7 @@ src/logger/packet_log.o: src/logger/packet_log.cpp.o
 
 # target to build an object file
 src/logger/packet_log.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hanium_iot_gateway.dir/build.make CMakeFiles/hanium_iot_gateway.dir/src/logger/packet_log.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/logger.dir/build.make CMakeFiles/logger.dir/src/logger/packet_log.cpp.o
 .PHONY : src/logger/packet_log.cpp.o
 
 src/logger/packet_log.i: src/logger/packet_log.cpp.i
@@ -366,7 +409,7 @@ src/logger/packet_log.i: src/logger/packet_log.cpp.i
 
 # target to preprocess a source file
 src/logger/packet_log.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hanium_iot_gateway.dir/build.make CMakeFiles/hanium_iot_gateway.dir/src/logger/packet_log.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/logger.dir/build.make CMakeFiles/logger.dir/src/logger/packet_log.cpp.i
 .PHONY : src/logger/packet_log.cpp.i
 
 src/logger/packet_log.s: src/logger/packet_log.cpp.s
@@ -374,7 +417,7 @@ src/logger/packet_log.s: src/logger/packet_log.cpp.s
 
 # target to generate assembly for a file
 src/logger/packet_log.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hanium_iot_gateway.dir/build.make CMakeFiles/hanium_iot_gateway.dir/src/logger/packet_log.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/logger.dir/build.make CMakeFiles/logger.dir/src/logger/packet_log.cpp.s
 .PHONY : src/logger/packet_log.cpp.s
 
 src/main.o: src/main.cpp.o
@@ -406,7 +449,7 @@ src/master/master_board.o: src/master/master_board.cpp.o
 
 # target to build an object file
 src/master/master_board.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hanium_iot_gateway.dir/build.make CMakeFiles/hanium_iot_gateway.dir/src/master/master_board.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/gateway.dir/build.make CMakeFiles/gateway.dir/src/master/master_board.cpp.o
 .PHONY : src/master/master_board.cpp.o
 
 src/master/master_board.i: src/master/master_board.cpp.i
@@ -414,7 +457,7 @@ src/master/master_board.i: src/master/master_board.cpp.i
 
 # target to preprocess a source file
 src/master/master_board.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hanium_iot_gateway.dir/build.make CMakeFiles/hanium_iot_gateway.dir/src/master/master_board.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/gateway.dir/build.make CMakeFiles/gateway.dir/src/master/master_board.cpp.i
 .PHONY : src/master/master_board.cpp.i
 
 src/master/master_board.s: src/master/master_board.cpp.s
@@ -422,7 +465,7 @@ src/master/master_board.s: src/master/master_board.cpp.s
 
 # target to generate assembly for a file
 src/master/master_board.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hanium_iot_gateway.dir/build.make CMakeFiles/hanium_iot_gateway.dir/src/master/master_board.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/gateway.dir/build.make CMakeFiles/gateway.dir/src/master/master_board.cpp.s
 .PHONY : src/master/master_board.cpp.s
 
 src/mqtt/mqtt_manager.o: src/mqtt/mqtt_manager.cpp.o
@@ -430,7 +473,7 @@ src/mqtt/mqtt_manager.o: src/mqtt/mqtt_manager.cpp.o
 
 # target to build an object file
 src/mqtt/mqtt_manager.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hanium_iot_gateway.dir/build.make CMakeFiles/hanium_iot_gateway.dir/src/mqtt/mqtt_manager.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mqtt.dir/build.make CMakeFiles/mqtt.dir/src/mqtt/mqtt_manager.cpp.o
 .PHONY : src/mqtt/mqtt_manager.cpp.o
 
 src/mqtt/mqtt_manager.i: src/mqtt/mqtt_manager.cpp.i
@@ -438,7 +481,7 @@ src/mqtt/mqtt_manager.i: src/mqtt/mqtt_manager.cpp.i
 
 # target to preprocess a source file
 src/mqtt/mqtt_manager.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hanium_iot_gateway.dir/build.make CMakeFiles/hanium_iot_gateway.dir/src/mqtt/mqtt_manager.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mqtt.dir/build.make CMakeFiles/mqtt.dir/src/mqtt/mqtt_manager.cpp.i
 .PHONY : src/mqtt/mqtt_manager.cpp.i
 
 src/mqtt/mqtt_manager.s: src/mqtt/mqtt_manager.cpp.s
@@ -446,7 +489,7 @@ src/mqtt/mqtt_manager.s: src/mqtt/mqtt_manager.cpp.s
 
 # target to generate assembly for a file
 src/mqtt/mqtt_manager.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hanium_iot_gateway.dir/build.make CMakeFiles/hanium_iot_gateway.dir/src/mqtt/mqtt_manager.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mqtt.dir/build.make CMakeFiles/mqtt.dir/src/mqtt/mqtt_manager.cpp.s
 .PHONY : src/mqtt/mqtt_manager.cpp.s
 
 src/mqtt/mqtt_topic.o: src/mqtt/mqtt_topic.cpp.o
@@ -454,7 +497,7 @@ src/mqtt/mqtt_topic.o: src/mqtt/mqtt_topic.cpp.o
 
 # target to build an object file
 src/mqtt/mqtt_topic.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hanium_iot_gateway.dir/build.make CMakeFiles/hanium_iot_gateway.dir/src/mqtt/mqtt_topic.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mqtt.dir/build.make CMakeFiles/mqtt.dir/src/mqtt/mqtt_topic.cpp.o
 .PHONY : src/mqtt/mqtt_topic.cpp.o
 
 src/mqtt/mqtt_topic.i: src/mqtt/mqtt_topic.cpp.i
@@ -462,7 +505,7 @@ src/mqtt/mqtt_topic.i: src/mqtt/mqtt_topic.cpp.i
 
 # target to preprocess a source file
 src/mqtt/mqtt_topic.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hanium_iot_gateway.dir/build.make CMakeFiles/hanium_iot_gateway.dir/src/mqtt/mqtt_topic.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mqtt.dir/build.make CMakeFiles/mqtt.dir/src/mqtt/mqtt_topic.cpp.i
 .PHONY : src/mqtt/mqtt_topic.cpp.i
 
 src/mqtt/mqtt_topic.s: src/mqtt/mqtt_topic.cpp.s
@@ -470,7 +513,7 @@ src/mqtt/mqtt_topic.s: src/mqtt/mqtt_topic.cpp.s
 
 # target to generate assembly for a file
 src/mqtt/mqtt_topic.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hanium_iot_gateway.dir/build.make CMakeFiles/hanium_iot_gateway.dir/src/mqtt/mqtt_topic.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mqtt.dir/build.make CMakeFiles/mqtt.dir/src/mqtt/mqtt_topic.cpp.s
 .PHONY : src/mqtt/mqtt_topic.cpp.s
 
 src/packet/request_packet.o: src/packet/request_packet.cpp.o
@@ -478,7 +521,7 @@ src/packet/request_packet.o: src/packet/request_packet.cpp.o
 
 # target to build an object file
 src/packet/request_packet.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hanium_iot_gateway.dir/build.make CMakeFiles/hanium_iot_gateway.dir/src/packet/request_packet.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/packet.dir/build.make CMakeFiles/packet.dir/src/packet/request_packet.cpp.o
 .PHONY : src/packet/request_packet.cpp.o
 
 src/packet/request_packet.i: src/packet/request_packet.cpp.i
@@ -486,7 +529,7 @@ src/packet/request_packet.i: src/packet/request_packet.cpp.i
 
 # target to preprocess a source file
 src/packet/request_packet.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hanium_iot_gateway.dir/build.make CMakeFiles/hanium_iot_gateway.dir/src/packet/request_packet.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/packet.dir/build.make CMakeFiles/packet.dir/src/packet/request_packet.cpp.i
 .PHONY : src/packet/request_packet.cpp.i
 
 src/packet/request_packet.s: src/packet/request_packet.cpp.s
@@ -494,7 +537,7 @@ src/packet/request_packet.s: src/packet/request_packet.cpp.s
 
 # target to generate assembly for a file
 src/packet/request_packet.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hanium_iot_gateway.dir/build.make CMakeFiles/hanium_iot_gateway.dir/src/packet/request_packet.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/packet.dir/build.make CMakeFiles/packet.dir/src/packet/request_packet.cpp.s
 .PHONY : src/packet/request_packet.cpp.s
 
 src/packet/response_packet.o: src/packet/response_packet.cpp.o
@@ -502,7 +545,7 @@ src/packet/response_packet.o: src/packet/response_packet.cpp.o
 
 # target to build an object file
 src/packet/response_packet.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hanium_iot_gateway.dir/build.make CMakeFiles/hanium_iot_gateway.dir/src/packet/response_packet.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/packet.dir/build.make CMakeFiles/packet.dir/src/packet/response_packet.cpp.o
 .PHONY : src/packet/response_packet.cpp.o
 
 src/packet/response_packet.i: src/packet/response_packet.cpp.i
@@ -510,7 +553,7 @@ src/packet/response_packet.i: src/packet/response_packet.cpp.i
 
 # target to preprocess a source file
 src/packet/response_packet.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hanium_iot_gateway.dir/build.make CMakeFiles/hanium_iot_gateway.dir/src/packet/response_packet.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/packet.dir/build.make CMakeFiles/packet.dir/src/packet/response_packet.cpp.i
 .PHONY : src/packet/response_packet.cpp.i
 
 src/packet/response_packet.s: src/packet/response_packet.cpp.s
@@ -518,7 +561,7 @@ src/packet/response_packet.s: src/packet/response_packet.cpp.s
 
 # target to generate assembly for a file
 src/packet/response_packet.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hanium_iot_gateway.dir/build.make CMakeFiles/hanium_iot_gateway.dir/src/packet/response_packet.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/packet.dir/build.make CMakeFiles/packet.dir/src/packet/response_packet.cpp.s
 .PHONY : src/packet/response_packet.cpp.s
 
 # Help Target
@@ -533,7 +576,11 @@ help:
 	@echo "... install/strip"
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
+	@echo "... gateway"
 	@echo "... hanium_iot_gateway"
+	@echo "... logger"
+	@echo "... mqtt"
+	@echo "... packet"
 	@echo "... serial"
 	@echo "... sqlite3"
 	@echo "... lib/serial/src/impl/unix.o"

@@ -4,7 +4,7 @@
 # compile C with /usr/bin/cc
 C_DEFINES = 
 
-C_INCLUDES = -I/home/jee/hanium/include -I/home/jee/hanium/lib/serial/include -I/home/jee/hanium/lib/rapidjson/include -I/home/jee/hanium/lib/sqlite
+C_INCLUDES = -I/home/jee/hanium/include -I/home/jee/hanium/lib/mosquitto/include -I/home/jee/hanium/lib/mosquitto/lib/cpp -I/home/jee/hanium/lib/serial/include -I/home/jee/hanium/lib/rapidjson/include -I/home/jee/hanium/lib/sqlite
 
 C_FLAGS = -O3 -DNDEBUG
 

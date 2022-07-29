@@ -69,136 +69,10 @@ include CMakeFiles/hanium_iot_gateway.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/hanium_iot_gateway.dir/flags.make
 
-CMakeFiles/hanium_iot_gateway.dir/src/mqtt/mqtt_manager.cpp.o: CMakeFiles/hanium_iot_gateway.dir/flags.make
-CMakeFiles/hanium_iot_gateway.dir/src/mqtt/mqtt_manager.cpp.o: ../src/mqtt/mqtt_manager.cpp
-CMakeFiles/hanium_iot_gateway.dir/src/mqtt/mqtt_manager.cpp.o: CMakeFiles/hanium_iot_gateway.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jee/hanium/release/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/hanium_iot_gateway.dir/src/mqtt/mqtt_manager.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/hanium_iot_gateway.dir/src/mqtt/mqtt_manager.cpp.o -MF CMakeFiles/hanium_iot_gateway.dir/src/mqtt/mqtt_manager.cpp.o.d -o CMakeFiles/hanium_iot_gateway.dir/src/mqtt/mqtt_manager.cpp.o -c /home/jee/hanium/src/mqtt/mqtt_manager.cpp
-
-CMakeFiles/hanium_iot_gateway.dir/src/mqtt/mqtt_manager.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/hanium_iot_gateway.dir/src/mqtt/mqtt_manager.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jee/hanium/src/mqtt/mqtt_manager.cpp > CMakeFiles/hanium_iot_gateway.dir/src/mqtt/mqtt_manager.cpp.i
-
-CMakeFiles/hanium_iot_gateway.dir/src/mqtt/mqtt_manager.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/hanium_iot_gateway.dir/src/mqtt/mqtt_manager.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jee/hanium/src/mqtt/mqtt_manager.cpp -o CMakeFiles/hanium_iot_gateway.dir/src/mqtt/mqtt_manager.cpp.s
-
-CMakeFiles/hanium_iot_gateway.dir/src/mqtt/mqtt_topic.cpp.o: CMakeFiles/hanium_iot_gateway.dir/flags.make
-CMakeFiles/hanium_iot_gateway.dir/src/mqtt/mqtt_topic.cpp.o: ../src/mqtt/mqtt_topic.cpp
-CMakeFiles/hanium_iot_gateway.dir/src/mqtt/mqtt_topic.cpp.o: CMakeFiles/hanium_iot_gateway.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jee/hanium/release/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/hanium_iot_gateway.dir/src/mqtt/mqtt_topic.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/hanium_iot_gateway.dir/src/mqtt/mqtt_topic.cpp.o -MF CMakeFiles/hanium_iot_gateway.dir/src/mqtt/mqtt_topic.cpp.o.d -o CMakeFiles/hanium_iot_gateway.dir/src/mqtt/mqtt_topic.cpp.o -c /home/jee/hanium/src/mqtt/mqtt_topic.cpp
-
-CMakeFiles/hanium_iot_gateway.dir/src/mqtt/mqtt_topic.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/hanium_iot_gateway.dir/src/mqtt/mqtt_topic.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jee/hanium/src/mqtt/mqtt_topic.cpp > CMakeFiles/hanium_iot_gateway.dir/src/mqtt/mqtt_topic.cpp.i
-
-CMakeFiles/hanium_iot_gateway.dir/src/mqtt/mqtt_topic.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/hanium_iot_gateway.dir/src/mqtt/mqtt_topic.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jee/hanium/src/mqtt/mqtt_topic.cpp -o CMakeFiles/hanium_iot_gateway.dir/src/mqtt/mqtt_topic.cpp.s
-
-CMakeFiles/hanium_iot_gateway.dir/src/master/master_board.cpp.o: CMakeFiles/hanium_iot_gateway.dir/flags.make
-CMakeFiles/hanium_iot_gateway.dir/src/master/master_board.cpp.o: ../src/master/master_board.cpp
-CMakeFiles/hanium_iot_gateway.dir/src/master/master_board.cpp.o: CMakeFiles/hanium_iot_gateway.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jee/hanium/release/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/hanium_iot_gateway.dir/src/master/master_board.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/hanium_iot_gateway.dir/src/master/master_board.cpp.o -MF CMakeFiles/hanium_iot_gateway.dir/src/master/master_board.cpp.o.d -o CMakeFiles/hanium_iot_gateway.dir/src/master/master_board.cpp.o -c /home/jee/hanium/src/master/master_board.cpp
-
-CMakeFiles/hanium_iot_gateway.dir/src/master/master_board.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/hanium_iot_gateway.dir/src/master/master_board.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jee/hanium/src/master/master_board.cpp > CMakeFiles/hanium_iot_gateway.dir/src/master/master_board.cpp.i
-
-CMakeFiles/hanium_iot_gateway.dir/src/master/master_board.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/hanium_iot_gateway.dir/src/master/master_board.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jee/hanium/src/master/master_board.cpp -o CMakeFiles/hanium_iot_gateway.dir/src/master/master_board.cpp.s
-
-CMakeFiles/hanium_iot_gateway.dir/src/gateway/gateway_manager.cpp.o: CMakeFiles/hanium_iot_gateway.dir/flags.make
-CMakeFiles/hanium_iot_gateway.dir/src/gateway/gateway_manager.cpp.o: ../src/gateway/gateway_manager.cpp
-CMakeFiles/hanium_iot_gateway.dir/src/gateway/gateway_manager.cpp.o: CMakeFiles/hanium_iot_gateway.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jee/hanium/release/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/hanium_iot_gateway.dir/src/gateway/gateway_manager.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/hanium_iot_gateway.dir/src/gateway/gateway_manager.cpp.o -MF CMakeFiles/hanium_iot_gateway.dir/src/gateway/gateway_manager.cpp.o.d -o CMakeFiles/hanium_iot_gateway.dir/src/gateway/gateway_manager.cpp.o -c /home/jee/hanium/src/gateway/gateway_manager.cpp
-
-CMakeFiles/hanium_iot_gateway.dir/src/gateway/gateway_manager.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/hanium_iot_gateway.dir/src/gateway/gateway_manager.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jee/hanium/src/gateway/gateway_manager.cpp > CMakeFiles/hanium_iot_gateway.dir/src/gateway/gateway_manager.cpp.i
-
-CMakeFiles/hanium_iot_gateway.dir/src/gateway/gateway_manager.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/hanium_iot_gateway.dir/src/gateway/gateway_manager.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jee/hanium/src/gateway/gateway_manager.cpp -o CMakeFiles/hanium_iot_gateway.dir/src/gateway/gateway_manager.cpp.s
-
-CMakeFiles/hanium_iot_gateway.dir/src/packet/request_packet.cpp.o: CMakeFiles/hanium_iot_gateway.dir/flags.make
-CMakeFiles/hanium_iot_gateway.dir/src/packet/request_packet.cpp.o: ../src/packet/request_packet.cpp
-CMakeFiles/hanium_iot_gateway.dir/src/packet/request_packet.cpp.o: CMakeFiles/hanium_iot_gateway.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jee/hanium/release/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/hanium_iot_gateway.dir/src/packet/request_packet.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/hanium_iot_gateway.dir/src/packet/request_packet.cpp.o -MF CMakeFiles/hanium_iot_gateway.dir/src/packet/request_packet.cpp.o.d -o CMakeFiles/hanium_iot_gateway.dir/src/packet/request_packet.cpp.o -c /home/jee/hanium/src/packet/request_packet.cpp
-
-CMakeFiles/hanium_iot_gateway.dir/src/packet/request_packet.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/hanium_iot_gateway.dir/src/packet/request_packet.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jee/hanium/src/packet/request_packet.cpp > CMakeFiles/hanium_iot_gateway.dir/src/packet/request_packet.cpp.i
-
-CMakeFiles/hanium_iot_gateway.dir/src/packet/request_packet.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/hanium_iot_gateway.dir/src/packet/request_packet.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jee/hanium/src/packet/request_packet.cpp -o CMakeFiles/hanium_iot_gateway.dir/src/packet/request_packet.cpp.s
-
-CMakeFiles/hanium_iot_gateway.dir/src/packet/response_packet.cpp.o: CMakeFiles/hanium_iot_gateway.dir/flags.make
-CMakeFiles/hanium_iot_gateway.dir/src/packet/response_packet.cpp.o: ../src/packet/response_packet.cpp
-CMakeFiles/hanium_iot_gateway.dir/src/packet/response_packet.cpp.o: CMakeFiles/hanium_iot_gateway.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jee/hanium/release/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/hanium_iot_gateway.dir/src/packet/response_packet.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/hanium_iot_gateway.dir/src/packet/response_packet.cpp.o -MF CMakeFiles/hanium_iot_gateway.dir/src/packet/response_packet.cpp.o.d -o CMakeFiles/hanium_iot_gateway.dir/src/packet/response_packet.cpp.o -c /home/jee/hanium/src/packet/response_packet.cpp
-
-CMakeFiles/hanium_iot_gateway.dir/src/packet/response_packet.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/hanium_iot_gateway.dir/src/packet/response_packet.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jee/hanium/src/packet/response_packet.cpp > CMakeFiles/hanium_iot_gateway.dir/src/packet/response_packet.cpp.i
-
-CMakeFiles/hanium_iot_gateway.dir/src/packet/response_packet.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/hanium_iot_gateway.dir/src/packet/response_packet.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jee/hanium/src/packet/response_packet.cpp -o CMakeFiles/hanium_iot_gateway.dir/src/packet/response_packet.cpp.s
-
-CMakeFiles/hanium_iot_gateway.dir/src/database/database.cpp.o: CMakeFiles/hanium_iot_gateway.dir/flags.make
-CMakeFiles/hanium_iot_gateway.dir/src/database/database.cpp.o: ../src/database/database.cpp
-CMakeFiles/hanium_iot_gateway.dir/src/database/database.cpp.o: CMakeFiles/hanium_iot_gateway.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jee/hanium/release/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/hanium_iot_gateway.dir/src/database/database.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/hanium_iot_gateway.dir/src/database/database.cpp.o -MF CMakeFiles/hanium_iot_gateway.dir/src/database/database.cpp.o.d -o CMakeFiles/hanium_iot_gateway.dir/src/database/database.cpp.o -c /home/jee/hanium/src/database/database.cpp
-
-CMakeFiles/hanium_iot_gateway.dir/src/database/database.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/hanium_iot_gateway.dir/src/database/database.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jee/hanium/src/database/database.cpp > CMakeFiles/hanium_iot_gateway.dir/src/database/database.cpp.i
-
-CMakeFiles/hanium_iot_gateway.dir/src/database/database.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/hanium_iot_gateway.dir/src/database/database.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jee/hanium/src/database/database.cpp -o CMakeFiles/hanium_iot_gateway.dir/src/database/database.cpp.s
-
-CMakeFiles/hanium_iot_gateway.dir/src/logger/packet_log.cpp.o: CMakeFiles/hanium_iot_gateway.dir/flags.make
-CMakeFiles/hanium_iot_gateway.dir/src/logger/packet_log.cpp.o: ../src/logger/packet_log.cpp
-CMakeFiles/hanium_iot_gateway.dir/src/logger/packet_log.cpp.o: CMakeFiles/hanium_iot_gateway.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jee/hanium/release/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/hanium_iot_gateway.dir/src/logger/packet_log.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/hanium_iot_gateway.dir/src/logger/packet_log.cpp.o -MF CMakeFiles/hanium_iot_gateway.dir/src/logger/packet_log.cpp.o.d -o CMakeFiles/hanium_iot_gateway.dir/src/logger/packet_log.cpp.o -c /home/jee/hanium/src/logger/packet_log.cpp
-
-CMakeFiles/hanium_iot_gateway.dir/src/logger/packet_log.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/hanium_iot_gateway.dir/src/logger/packet_log.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jee/hanium/src/logger/packet_log.cpp > CMakeFiles/hanium_iot_gateway.dir/src/logger/packet_log.cpp.i
-
-CMakeFiles/hanium_iot_gateway.dir/src/logger/packet_log.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/hanium_iot_gateway.dir/src/logger/packet_log.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jee/hanium/src/logger/packet_log.cpp -o CMakeFiles/hanium_iot_gateway.dir/src/logger/packet_log.cpp.s
-
-CMakeFiles/hanium_iot_gateway.dir/src/logger/logger.cpp.o: CMakeFiles/hanium_iot_gateway.dir/flags.make
-CMakeFiles/hanium_iot_gateway.dir/src/logger/logger.cpp.o: ../src/logger/logger.cpp
-CMakeFiles/hanium_iot_gateway.dir/src/logger/logger.cpp.o: CMakeFiles/hanium_iot_gateway.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jee/hanium/release/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/hanium_iot_gateway.dir/src/logger/logger.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/hanium_iot_gateway.dir/src/logger/logger.cpp.o -MF CMakeFiles/hanium_iot_gateway.dir/src/logger/logger.cpp.o.d -o CMakeFiles/hanium_iot_gateway.dir/src/logger/logger.cpp.o -c /home/jee/hanium/src/logger/logger.cpp
-
-CMakeFiles/hanium_iot_gateway.dir/src/logger/logger.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/hanium_iot_gateway.dir/src/logger/logger.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jee/hanium/src/logger/logger.cpp > CMakeFiles/hanium_iot_gateway.dir/src/logger/logger.cpp.i
-
-CMakeFiles/hanium_iot_gateway.dir/src/logger/logger.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/hanium_iot_gateway.dir/src/logger/logger.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jee/hanium/src/logger/logger.cpp -o CMakeFiles/hanium_iot_gateway.dir/src/logger/logger.cpp.s
-
 CMakeFiles/hanium_iot_gateway.dir/src/main.cpp.o: CMakeFiles/hanium_iot_gateway.dir/flags.make
 CMakeFiles/hanium_iot_gateway.dir/src/main.cpp.o: ../src/main.cpp
 CMakeFiles/hanium_iot_gateway.dir/src/main.cpp.o: CMakeFiles/hanium_iot_gateway.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jee/hanium/release/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/hanium_iot_gateway.dir/src/main.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jee/hanium/release/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/hanium_iot_gateway.dir/src/main.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/hanium_iot_gateway.dir/src/main.cpp.o -MF CMakeFiles/hanium_iot_gateway.dir/src/main.cpp.o.d -o CMakeFiles/hanium_iot_gateway.dir/src/main.cpp.o -c /home/jee/hanium/src/main.cpp
 
 CMakeFiles/hanium_iot_gateway.dir/src/main.cpp.i: cmake_force
@@ -209,85 +83,24 @@ CMakeFiles/hanium_iot_gateway.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/hanium_iot_gateway.dir/src/main.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jee/hanium/src/main.cpp -o CMakeFiles/hanium_iot_gateway.dir/src/main.cpp.s
 
-CMakeFiles/hanium_iot_gateway.dir/lib/serial/src/serial.cc.o: CMakeFiles/hanium_iot_gateway.dir/flags.make
-CMakeFiles/hanium_iot_gateway.dir/lib/serial/src/serial.cc.o: ../lib/serial/src/serial.cc
-CMakeFiles/hanium_iot_gateway.dir/lib/serial/src/serial.cc.o: CMakeFiles/hanium_iot_gateway.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jee/hanium/release/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/hanium_iot_gateway.dir/lib/serial/src/serial.cc.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/hanium_iot_gateway.dir/lib/serial/src/serial.cc.o -MF CMakeFiles/hanium_iot_gateway.dir/lib/serial/src/serial.cc.o.d -o CMakeFiles/hanium_iot_gateway.dir/lib/serial/src/serial.cc.o -c /home/jee/hanium/lib/serial/src/serial.cc
-
-CMakeFiles/hanium_iot_gateway.dir/lib/serial/src/serial.cc.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/hanium_iot_gateway.dir/lib/serial/src/serial.cc.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jee/hanium/lib/serial/src/serial.cc > CMakeFiles/hanium_iot_gateway.dir/lib/serial/src/serial.cc.i
-
-CMakeFiles/hanium_iot_gateway.dir/lib/serial/src/serial.cc.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/hanium_iot_gateway.dir/lib/serial/src/serial.cc.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jee/hanium/lib/serial/src/serial.cc -o CMakeFiles/hanium_iot_gateway.dir/lib/serial/src/serial.cc.s
-
-CMakeFiles/hanium_iot_gateway.dir/lib/serial/src/impl/unix.cc.o: CMakeFiles/hanium_iot_gateway.dir/flags.make
-CMakeFiles/hanium_iot_gateway.dir/lib/serial/src/impl/unix.cc.o: ../lib/serial/src/impl/unix.cc
-CMakeFiles/hanium_iot_gateway.dir/lib/serial/src/impl/unix.cc.o: CMakeFiles/hanium_iot_gateway.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jee/hanium/release/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/hanium_iot_gateway.dir/lib/serial/src/impl/unix.cc.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/hanium_iot_gateway.dir/lib/serial/src/impl/unix.cc.o -MF CMakeFiles/hanium_iot_gateway.dir/lib/serial/src/impl/unix.cc.o.d -o CMakeFiles/hanium_iot_gateway.dir/lib/serial/src/impl/unix.cc.o -c /home/jee/hanium/lib/serial/src/impl/unix.cc
-
-CMakeFiles/hanium_iot_gateway.dir/lib/serial/src/impl/unix.cc.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/hanium_iot_gateway.dir/lib/serial/src/impl/unix.cc.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jee/hanium/lib/serial/src/impl/unix.cc > CMakeFiles/hanium_iot_gateway.dir/lib/serial/src/impl/unix.cc.i
-
-CMakeFiles/hanium_iot_gateway.dir/lib/serial/src/impl/unix.cc.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/hanium_iot_gateway.dir/lib/serial/src/impl/unix.cc.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jee/hanium/lib/serial/src/impl/unix.cc -o CMakeFiles/hanium_iot_gateway.dir/lib/serial/src/impl/unix.cc.s
-
-CMakeFiles/hanium_iot_gateway.dir/lib/sqlite/sqlite3.c.o: CMakeFiles/hanium_iot_gateway.dir/flags.make
-CMakeFiles/hanium_iot_gateway.dir/lib/sqlite/sqlite3.c.o: ../lib/sqlite/sqlite3.c
-CMakeFiles/hanium_iot_gateway.dir/lib/sqlite/sqlite3.c.o: CMakeFiles/hanium_iot_gateway.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jee/hanium/release/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building C object CMakeFiles/hanium_iot_gateway.dir/lib/sqlite/sqlite3.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/hanium_iot_gateway.dir/lib/sqlite/sqlite3.c.o -MF CMakeFiles/hanium_iot_gateway.dir/lib/sqlite/sqlite3.c.o.d -o CMakeFiles/hanium_iot_gateway.dir/lib/sqlite/sqlite3.c.o -c /home/jee/hanium/lib/sqlite/sqlite3.c
-
-CMakeFiles/hanium_iot_gateway.dir/lib/sqlite/sqlite3.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/hanium_iot_gateway.dir/lib/sqlite/sqlite3.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/jee/hanium/lib/sqlite/sqlite3.c > CMakeFiles/hanium_iot_gateway.dir/lib/sqlite/sqlite3.c.i
-
-CMakeFiles/hanium_iot_gateway.dir/lib/sqlite/sqlite3.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/hanium_iot_gateway.dir/lib/sqlite/sqlite3.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/jee/hanium/lib/sqlite/sqlite3.c -o CMakeFiles/hanium_iot_gateway.dir/lib/sqlite/sqlite3.c.s
-
 # Object files for target hanium_iot_gateway
 hanium_iot_gateway_OBJECTS = \
-"CMakeFiles/hanium_iot_gateway.dir/src/mqtt/mqtt_manager.cpp.o" \
-"CMakeFiles/hanium_iot_gateway.dir/src/mqtt/mqtt_topic.cpp.o" \
-"CMakeFiles/hanium_iot_gateway.dir/src/master/master_board.cpp.o" \
-"CMakeFiles/hanium_iot_gateway.dir/src/gateway/gateway_manager.cpp.o" \
-"CMakeFiles/hanium_iot_gateway.dir/src/packet/request_packet.cpp.o" \
-"CMakeFiles/hanium_iot_gateway.dir/src/packet/response_packet.cpp.o" \
-"CMakeFiles/hanium_iot_gateway.dir/src/database/database.cpp.o" \
-"CMakeFiles/hanium_iot_gateway.dir/src/logger/packet_log.cpp.o" \
-"CMakeFiles/hanium_iot_gateway.dir/src/logger/logger.cpp.o" \
-"CMakeFiles/hanium_iot_gateway.dir/src/main.cpp.o" \
-"CMakeFiles/hanium_iot_gateway.dir/lib/serial/src/serial.cc.o" \
-"CMakeFiles/hanium_iot_gateway.dir/lib/serial/src/impl/unix.cc.o" \
-"CMakeFiles/hanium_iot_gateway.dir/lib/sqlite/sqlite3.c.o"
+"CMakeFiles/hanium_iot_gateway.dir/src/main.cpp.o"
 
 # External object files for target hanium_iot_gateway
 hanium_iot_gateway_EXTERNAL_OBJECTS =
 
-hanium_iot_gateway: CMakeFiles/hanium_iot_gateway.dir/src/mqtt/mqtt_manager.cpp.o
-hanium_iot_gateway: CMakeFiles/hanium_iot_gateway.dir/src/mqtt/mqtt_topic.cpp.o
-hanium_iot_gateway: CMakeFiles/hanium_iot_gateway.dir/src/master/master_board.cpp.o
-hanium_iot_gateway: CMakeFiles/hanium_iot_gateway.dir/src/gateway/gateway_manager.cpp.o
-hanium_iot_gateway: CMakeFiles/hanium_iot_gateway.dir/src/packet/request_packet.cpp.o
-hanium_iot_gateway: CMakeFiles/hanium_iot_gateway.dir/src/packet/response_packet.cpp.o
-hanium_iot_gateway: CMakeFiles/hanium_iot_gateway.dir/src/database/database.cpp.o
-hanium_iot_gateway: CMakeFiles/hanium_iot_gateway.dir/src/logger/packet_log.cpp.o
-hanium_iot_gateway: CMakeFiles/hanium_iot_gateway.dir/src/logger/logger.cpp.o
 hanium_iot_gateway: CMakeFiles/hanium_iot_gateway.dir/src/main.cpp.o
-hanium_iot_gateway: CMakeFiles/hanium_iot_gateway.dir/lib/serial/src/serial.cc.o
-hanium_iot_gateway: CMakeFiles/hanium_iot_gateway.dir/lib/serial/src/impl/unix.cc.o
-hanium_iot_gateway: CMakeFiles/hanium_iot_gateway.dir/lib/sqlite/sqlite3.c.o
 hanium_iot_gateway: CMakeFiles/hanium_iot_gateway.dir/build.make
+hanium_iot_gateway: libpacket.a
+hanium_iot_gateway: libgateway.a
+hanium_iot_gateway: libmqtt.a
+hanium_iot_gateway: liblogger.a
+hanium_iot_gateway: libserial.a
 hanium_iot_gateway: libsqlite3.a
 hanium_iot_gateway: /usr/lib/x86_64-linux-gnu/libmosquittopp.so
 hanium_iot_gateway: CMakeFiles/hanium_iot_gateway.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/jee/hanium/release/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Linking CXX executable hanium_iot_gateway"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/jee/hanium/release/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable hanium_iot_gateway"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/hanium_iot_gateway.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
