@@ -1,9 +1,0 @@
-/home/jee/hanium/release/CMakeFiles/install.dir
-/home/jee/hanium/release/CMakeFiles/list_install_components.dir
-/home/jee/hanium/release/CMakeFiles/rebuild_cache.dir
-/home/jee/hanium/release/CMakeFiles/install/strip.dir
-/home/jee/hanium/release/CMakeFiles/install/local.dir
-/home/jee/hanium/release/CMakeFiles/serial.dir
-/home/jee/hanium/release/CMakeFiles/sqlite3.dir
-/home/jee/hanium/release/CMakeFiles/hanium_iot_gateway.dir
-/home/jee/hanium/release/CMakeFiles/edit_cache.dir
