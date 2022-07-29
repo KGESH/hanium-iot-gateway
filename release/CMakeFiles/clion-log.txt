@@ -1,4 +1,0 @@
-/opt/clion-2021.3.4/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Release -G "CodeBlocks - Unix Makefiles" /home/jee/hanium
--- Configuring done
--- Generating done
--- Build files have been written to: /home/jee/hanium/release

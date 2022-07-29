@@ -1,1 +1,0 @@
-/usr/bin/c++  -pthread -O3 -DNDEBUG CMakeFiles/hanium_iot_gateway.dir/src/main.cpp.o -o hanium_iot_gateway  libpacket.a libgateway.a libmqtt.a liblogger.a libserial.a libsqlite3.a /usr/lib/x86_64-linux-gnu/libmosquittopp.so 
