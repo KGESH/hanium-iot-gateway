@@ -31,22 +31,22 @@ public:
 
     serial::Serial& serial_port() const;
 
-    static void ResetPollingCount();
+    void ResetPollingCount();
 
-    static void IncreasePollingCount();
+    void IncreasePollingCount();
 
-    static int polling_count();
+    int polling_count() const;
 
 
-    void SetSlaveCount(const uint8_t slave_count);
+    void SetSlaveCount(uint8_t slave_count);
 
     uint8_t slave_count() const;
 
 private:
     std::unique_ptr<serial::Serial> serial_port_;
-    static int polling_count_;
-    int master_id_;
-    int slave_count_;
+    int polling_count_ = 0;
+    int master_id_ = 0;
+    int slave_count_ = 0;
     std::array<uint8_t, kMaxSlaveCount> slave_ids_;
 };
 

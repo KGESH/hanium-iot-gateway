@@ -80,7 +80,7 @@ void MQTTManager::on_message(const struct mosquitto_message* message) {
     {
         PacketLog log("MQTT_TO_GATEWAY", "RECEIVE_MSG", Util::RawPacketToString(packet));
         Logger::CreateLog(log);
-        Logger::ReadLog();
+//        Logger::ReadLog();
     }
 }
 
@@ -139,6 +139,8 @@ std::vector<uint8_t> MQTTManager::MakePacket(const std::string& topic, const std
 #ifdef DEBUG
         std::cout << "Parse Fail. Code: " << parse_fail << std::endl;
 #endif
+        PacketLog log("MQTT_TO_GATEWAY", topic, Util::RawPacketToString(packet));
+        Logger::CreateLog(log);
         return {};
     }
 

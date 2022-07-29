@@ -4,7 +4,6 @@
 #include "master/master_board.h"
 #include "packet/request_packet.h"
 
-int MasterBoard::polling_count_ = 0;
 
 MasterBoard::MasterBoard(const std::string& port_name, int baudrate)
         : serial_port_(std::make_unique<serial::Serial>(port_name, baudrate, serial::Timeout::simpleTimeout(20000))) {}
@@ -21,7 +20,7 @@ void MasterBoard::IncreasePollingCount() {
     polling_count_++;
 }
 
-int MasterBoard::polling_count() {
+int MasterBoard::polling_count() const {
     return polling_count_;
 }
 
@@ -42,7 +41,7 @@ void MasterBoard::SetSlaveIds(const std::array<uint8_t, kMaxSlaveCount>& slaveId
     slave_ids_ = slaveIds;
 }
 
-void MasterBoard::SetSlaveCount(const uint8_t slave_count) {
+void MasterBoard::SetSlaveCount(uint8_t slave_count) {
     slave_count_ = slave_count;
 }
 

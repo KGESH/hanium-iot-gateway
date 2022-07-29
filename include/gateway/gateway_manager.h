@@ -28,15 +28,15 @@ public:
                    Packet::RAW_PACKET_Q* packet_queue, std::mutex* packet_queue_mutex,
                    std::condition_variable* packet_queue_cv);
 
-    bool ListeningMaster(MQTTManager& mqtt_manager) const;
+    bool ListeningMaster(MQTTManager& mqtt_manager);
 
     bool SetupMasterId();
 
     bool SetupSlaveIds();
 
-    void ParseCommand(ResponsePacket& packet, MQTTManager& mqtt_manager) const;
+    void ParseCommand(ResponsePacket& packet, MQTTManager& mqtt_manager);
 
-    void Polling(MQTTManager& mqtt_manager) const;
+    void Polling(MQTTManager& mqtt_manager);
 
     void RequestTemperature() const;
 
@@ -62,7 +62,7 @@ private:
 
     void PublishTestPacket(ResponsePacket& packet, MQTTManager& mqtt_manager) const;
 
-    void PublishPollingSuccess(MQTTManager& mqtt_manager) const;
+    void PublishPollingSuccess(MQTTManager& mqtt_manager);
 
     void PublishSensorStateTopic(ResponsePacket& packet, MQTTManager& mqtt_manager, std::string&& sensor_name) const;
 

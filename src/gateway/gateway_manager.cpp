@@ -26,10 +26,11 @@ GatewayManager::GatewayManager(const std::string& serial_port_name, int baudrate
  * @return master/{MasterId}/slave/{SlaveId}/{SensorName}/state
  * */
 std::string GatewayManager::GetSlaveStateTopic(const uint8_t slave_id, const std::string& sensor_name) const {
-    return MqttTopic::kMasterTopic + std::to_string(master_board_.master_id()) + "/slave/" + std::to_string(slave_id) + "/" + sensor_name + "/state";
+    return MqttTopic::kMasterTopic + std::to_string(master_board_.master_id()) + "/slave/" + std::to_string(slave_id) +
+           "/" + sensor_name + "/state";
 }
 
-bool GatewayManager::ListeningMaster(MQTTManager& mqtt_manager) const {
+bool GatewayManager::ListeningMaster(MQTTManager& mqtt_manager) {
     auto[packet, receive_fail] = ReceivePacket();
 
     if (receive_fail || !packet.ValidChecksum()) {
@@ -53,7 +54,7 @@ bool GatewayManager::ListeningMaster(MQTTManager& mqtt_manager) const {
     return true;
 }
 
-void GatewayManager::ParseCommand(ResponsePacket& packet, MQTTManager& mqtt_manager) const {
+void GatewayManager::ParseCommand(ResponsePacket& packet, MQTTManager& mqtt_manager) {
     uint16_t target_memory_address = 0;
 
     if (packet.header().data_length > 0) {
@@ -174,7 +175,7 @@ void GatewayManager::PublishTestPacket(ResponsePacket& packet, MQTTManager& mqtt
 }
 
 
-void GatewayManager::PublishPollingSuccess(MQTTManager& mqtt_manager) const {
+void GatewayManager::PublishPollingSuccess(MQTTManager& mqtt_manager) {
     mqtt_manager.PublishTopic(MqttTopic::kPollingTopic, std::to_string(kOK));
     master_board_.ResetPollingCount();
 }
@@ -209,7 +210,7 @@ void GatewayManager::PublishTemperature(ResponsePacket& packet, MQTTManager& mqt
     mqtt_manager.PublishTopic(topic, std::to_string(temperature));
 }
 
-void GatewayManager::Polling(MQTTManager& mqtt_manager) const {
+void GatewayManager::Polling(MQTTManager& mqtt_manager) {
     static constexpr auto kMaxPollingCount = 10;
     if (master_board_.polling_count() > kMaxPollingCount) {
         /*  TODO: Publish master error message after change protocol  */
@@ -284,15 +285,17 @@ GatewayManager::PublishError(MQTTManager& mqtt_manager, const std::string& topic
 
 
 void GatewayManager::RequestTemperature() const {
-    /* TODO: after iterator all slave id
-     * ex) 0x11, 0x12, 0x22, 0x33 ...*/
-    constexpr uint8_t kSlaveId = 0x11;
-    const RequestHeader header{0x23, 0x22, kSlaveId, 0xc1, 0x02};
-    const PacketBody body{0x07, 0xd0};
-    RequestPacket temperature_packet(header, body);
-    {
-        std::unique_lock<std::mutex> lock(*this->packet_queue_mutex_);
-        this->packet_queue_->push(temperature_packet.Packet());
+    const auto slave_ids = master_board().slave_ids();
+    const auto slave_count = master_board().slave_count();
+
+    for (int i = 0; i < slave_count; i++) {
+        const RequestHeader header{0x23, 0x22, slave_ids[i], 0xc1, 0x02};
+        const PacketBody body{0x07, 0xd0};
+        RequestPacket temperature_packet(header, body);
+        {
+            std::unique_lock<std::mutex> lock(*this->packet_queue_mutex_);
+            this->packet_queue_->push(temperature_packet.Packet());
+        }
     }
 }
 
@@ -374,7 +377,8 @@ GatewayManager::ParseMemoryWrite(ResponsePacket& packet, MQTTManager& mqtt_manag
     switch (memory_address) {
         case kTemperatureStart ... kTemperatureEnd:
             /** Todo: Assert */
-            PublishError(mqtt_manager, MqttTopic::kAssertTopic + "/MemoryWriteTemperature", Util::PacketToString(packet));
+            PublishError(mqtt_manager, MqttTopic::kAssertTopic + "/MemoryWriteTemperature",
+                         Util::PacketToString(packet));
             return;
 
         case kHumidityStart ... kHumidityEnd:
