@@ -32,6 +32,7 @@ add_library(mqtt_manager STATIC ${MQTT_MANAGER_SOURCES})
 # Set Gateway Manager Module
 set(GATEWAY_MANAGER_SOURCES
         src/master/master_board.cpp
+        src/master/master_config.cpp
         src/gateway/gateway_manager.cpp)
 add_library(gateway_manager STATIC ${GATEWAY_MANAGER_SOURCES})
 
